@@ -30,3 +30,10 @@ class Email_server():
             server.login(self.sender, self.pswrd)
             server.sendmail(self.sender, mail, text)
     
+def main()->None:
+    serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
+    serv.load_from_template("template/test_mail.txt")
+    serv.send("samuel.huwiler@gmx.ch")
+
+if __name__=="__main__":
+    main()
