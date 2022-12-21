@@ -14,9 +14,11 @@ class Email_server():
         self.message:str = "Hello_world"
 
     def load_from_template(self,file_name:str)->None:
-        pass
+        with open(file_name,"r") as f:
+            self.message = f.read().strip()
 
     def send(self,mail:str)->None:
+        self.message = self.message.replace("{mail}",mail)
         msg = MIMEMultipart()
         msg["From"] = self.sender
         msg["To"] = mail
