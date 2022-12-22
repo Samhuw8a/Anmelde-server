@@ -52,7 +52,9 @@ class Handler():
 
 def main()->None:
     p = Parser()
-    print(p.load_config("test_config.ini"))
+    conf = p.load_config("test_config.ini")
+    h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"])
+    print(str(h.sql_call("Select * from registration")))
 
 if __name__ == "__main__":
     main()
