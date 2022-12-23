@@ -8,9 +8,6 @@ class ERROR_tests(unittest.TestCase):
         e = errors.Error("test")
         self.assertEqual(str(e),"test")
 
-    def test_errorhandler(self):
-        eh = errors.Error_handler(errors.Error("kul"),StopAsyncIteration)
-        self.assertTrue(str(eh))
 
 class MAIL_test(unittest.TestCase):
     # Email_client

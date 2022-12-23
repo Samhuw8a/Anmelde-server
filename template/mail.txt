@@ -1,0 +1,8 @@
+Hallo {name}
+
+Benutze bitte folgenden Token für deine Registrierung:
+
+{toke}
+ksrminecraft.ch/token.php
+
+Bitte antworte nicht auf diese E-mail.
