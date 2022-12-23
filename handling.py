@@ -38,6 +38,7 @@ class Parser():
         return User(mail,username,name)
 
     def mc_call(self,resp:str)->bool:
+        # TODO: response als registriet oder falscher username identifizieren.
         return True
 
 class Handler():

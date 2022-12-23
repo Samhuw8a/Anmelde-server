@@ -15,5 +15,7 @@ class MAIL_test(unittest.TestCase):
     ec.load_from_template("template/test_mail.txt")
     assert ec.message.replace("{mail}","test_mail") =="test test_mail" 
 
+#TODO: tests für das Handling und mail system
+
 if __name__ == "__main__":
     unittest.main()
