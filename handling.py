@@ -37,6 +37,9 @@ class Parser():
         name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
         return User(mail,username,name)
 
+    def mc_call(self,resp:str)->bool:
+        return True
+
 class Handler():
 
     def __init__(self,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str) -> None:
@@ -52,16 +55,15 @@ class Handler():
                            con=engine
                           )
     def mcrcon_call(self,cmd:str)->str:
-        pass
+        with MCRcon("45.154.49.72", self.mc_password) as mcr:
+            resp = mcr.command(cmd)
+        return resp
 
 def main()->None:
     p = Parser()
     conf = p.load_config("config.ini")
     h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
-    rs=h.sql_call("SELECT * FROM registration")
-    print(str(rs))
-    u = p.get_user(rs)
-    print(u)
+    print(h.mcrcon_call("say Hallo"))
 
 if __name__ == "__main__":
     main()
