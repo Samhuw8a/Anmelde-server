@@ -2,6 +2,5 @@ sqlalchemy==1.4.41
 pymysql
 pandas
 mcrcon
-smtplib
 ssl
 unitest

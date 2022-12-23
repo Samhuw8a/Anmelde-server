@@ -10,6 +10,7 @@ class User():
         self.mail:str     = mail 
         self.username:str = username
         self.name:str     = name
+
     def __repr__(self) -> str:
         return f"User({self.mail},{self.username},{self.name})"
 
@@ -31,30 +32,36 @@ class Parser():
         }
 
     def get_user(self, dbframe:pd.DataFrame)->User:
-        mail = dbframe["reg_mail"]
-        username = dbframe["reg_username"]
-        name = dbframe["reg_name"]
+        mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
+        username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
+        name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
         return User(mail,username,name)
 
 class Handler():
 
-    def __init__(self,username:str,pswrd:str,server_ip:str) -> None:
-        self.username:str = username
-        self.password:str = pswrd
-        self.ip:str       = server_ip
+    def __init__(self,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str) -> None:
+        self.db_username:str = db_username
+        self.db_password:str = db_pswrd
+        self.db_ip:str       = db_server_ip
+        self.mc_password:str = mc_pswrd
 
     def sql_call(self,cmd:str)->pd.DataFrame:
         engine = sqlalchemy.create_engine(
-            f"mysql+pymysql://{self.username}:{self.password}@{self.ip}/Registration")
+            f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
         return pd.read_sql(str(cmd),
                            con=engine
                           )
+    def mcrcon_call(self,cmd:str)->str:
+        pass
 
 def main()->None:
     p = Parser()
-    conf = p.load_config("test_config.ini")
-    h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"])
-    print(str(h.sql_call("Select * from registration")))
+    conf = p.load_config("config.ini")
+    h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
+    rs=h.sql_call("SELECT * FROM registration")
+    print(str(rs))
+    u = p.get_user(rs)
+    print(u)
 
 if __name__ == "__main__":
     main()
