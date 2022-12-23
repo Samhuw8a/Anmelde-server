@@ -1,7 +1,7 @@
 # TODO:
 
-- [  ] tests
-- [  ] event handling
-- [  ] saubere Mails
-- [  ] error impelmentierung
-- [  ] deployment
+- [ ] tests
+- [ ] event handling
+- [ ] saubere Mails
+- [ ] error impelmentierung
+- [ ] deployment
