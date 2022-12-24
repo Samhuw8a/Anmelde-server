@@ -2,7 +2,7 @@ Hallo {name}
 
 Benutze bitte folgenden Token für deine Registrierung:
 
-{toke}
+{token}
 ksrminecraft.ch/token.php
 
 Bitte antworte nicht auf diese E-mail.

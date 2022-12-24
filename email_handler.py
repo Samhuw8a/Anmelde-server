@@ -17,8 +17,10 @@ class Email_server():
         with open(file_name,"r") as f:
             self.message = f.read().strip()
 
-    def send(self,mail:str)->None:
+    def send(self,mail:str,token:int, name:str)->None:
         self.message = self.message.replace("{mail}",mail)
+        self.message = self.message.replace("{token}",str(token))
+        self.message = self.message.replace("{name}",name)
         msg = MIMEMultipart()
         msg["From"] = self.sender
         msg["To"] = mail
@@ -33,7 +35,7 @@ class Email_server():
 def main()->None:
     serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
     serv.load_from_template("template/test_mail.txt")
-    serv.send("samuel.huwiler@gmx.ch")
+    serv.send("samuel.huwiler@gmx.ch",123,"same")
 
 if __name__=="__main__":
     main()

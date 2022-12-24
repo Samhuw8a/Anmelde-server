@@ -1,7 +1,8 @@
 # TODO:
 
+- [ ] handling awaittoken
 - [ ] tests
-- [ ] event handling
+- [x] event handling
 - [ ] saubere Mails
-- [ ] error impelmentierung
+- [x] error impelmentierung
 - [ ] deployment

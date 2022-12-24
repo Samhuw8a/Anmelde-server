@@ -3,13 +3,13 @@ from   mcrcon import MCRcon
 import sqlalchemy
 import pandas as pd
 import time
-import random
 
 class User():
     def __init__(self,mail:str,username:str,name:str) -> None:
         self.mail:str     = mail 
         self.username:str = username
         self.name:str     = name
+        self.toke:int     = 0
 
     def __repr__(self) -> str:
         return f"User({self.mail},{self.username},{self.name})"
@@ -30,6 +30,7 @@ class Parser():
         "mail_password"   : str(config['credentials']['password_web']),
         "mcrcon_password" : str(config['credentials']['mcpassword']),
         }
+
 
     def get_user(self, dbframe:pd.DataFrame)->User:
         mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
@@ -55,6 +56,10 @@ class Handler():
         return pd.read_sql(str(cmd),
                            con=engine
                           )
+
+    def await_token(self,user:User)->bool:
+        return True
+
     def mcrcon_call(self,cmd:str)->str:
         with MCRcon("45.154.49.72", self.mc_password) as mcr:
             resp = mcr.command(cmd)
