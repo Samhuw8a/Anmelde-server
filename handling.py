@@ -9,7 +9,7 @@ class User():
         self.mail:str     = mail 
         self.username:str = username
         self.name:str     = name
-        self.toke:int     = 0
+        self.token:int     = 0
 
     def __repr__(self) -> str:
         return f"User({self.mail},{self.username},{self.name})"
@@ -56,6 +56,11 @@ class Handler():
         return pd.read_sql(str(cmd),
                            con=engine
                           )
+    def sql_update(self,cmd:str)->pd.DataFrame:
+        engine = sqlalchemy.create_engine(
+            f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
+        with engine.connect() as connection:
+            result = connection.execute(sqlalchemy.text(cmd))
 
     def await_token(self,user:User)->bool:
         return True

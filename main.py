@@ -8,20 +8,22 @@ class Event_handler():
     def __init__(self)->None:
         self.parser  = Parser()
         config:dict  = self.parser.load_config("config.ini")
-        self.handler = Handler(config["db_username"],config["db_passord"],config["db_server_ip"],config["mcrcon_password"])
-        self.emailer = Email_server(465,"cap.ssl.hosttech.eu",config["mail_passord"])
+        self.handler = Handler(config["db_username"],config["db_password"],config["db_server_ip"],config["mcrcon_password"])
+        self.emailer = Email_server(465,"cap.ssl.hosttech.eu",config["mail_password"])
 
     def is_done(self,user:User)->None:
-        self.handler.sql_call(f"UPDATE registration SET reg_done =1.0 WHERE reg_mail = {user.mail}")
+        self.handler.sql_update(f"UPDATE registration SET reg_done = 1.0 WHERE reg_mail = '{user.mail}'")
     def is_undone(self,user:User)->None:
-        self.handler.sql_call(f"UPDATE registration SET reg_done =2.0 WHERE reg_mail = {user.mail}")
+        self.handler.sql_update(f"UPDATE registration SET reg_done = 2.0 WHERE reg_mail = '{user.mail}'")
 
 
     def main(self)->None:
         que = self.handler.sql_call("SELECT * FROM registration WHERE reg_done is Null LIMIT 1")
+        if que.empty:
+            return 
         user = self.parser.get_user(que)
 
-        if user.mail.strip().split("@") !="sluz.ch":
+        if user.mail.strip()[-8:] !="@sluz.ch":
             self.is_undone(user)
             raise Error("keine valide sluz adresse")
 
@@ -43,8 +45,10 @@ class Event_handler():
 
 def main()->None:
     eventhandler = Event_handler()
-    while True:
-        eventhandler.main()
+    eventhandler.main()
+    #  while True:
+    #      eventhandler.main()
+    #      time.sleep(5)
 
 if __name__ =="__main__":
     main()
