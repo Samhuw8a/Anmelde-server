@@ -1,6 +1,6 @@
 # TODO:
 
-- [ ] handling awaittoken
+- [x] handling awaittoken
 - [ ] tests
 - [x] event handling
 - [ ] saubere Mails
