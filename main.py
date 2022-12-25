@@ -29,13 +29,17 @@ class Event_handler():
 
         user.token =  random.randint(1_000_000, 999_999_999)
         self.emailer.send(user.mail,user.token,user.name)
-        is_valid = self.handler.await_token(user)
+        try: is_valid = self.handler.await_token(user)
+        except Error as e:
+            self.is_undone(user)
+            raise e
 
         if not is_valid:
             self.is_undone(user)
             raise Error("falscher token")
 
         response = self.handler.mcrcon_call(f"whitelist add {user.username}")
+
         if not self.parser.mc_call(response):
             self.is_undone(user)
             raise Error("falscher Username")
@@ -45,10 +49,9 @@ class Event_handler():
 
 def main()->None:
     eventhandler = Event_handler()
-    eventhandler.main()
-    #  while True:
-    #      eventhandler.main()
-    #      time.sleep(5)
+    while True:
+        eventhandler.main()
+        time.sleep(5)
 
 if __name__ =="__main__":
     main()
