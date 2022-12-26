@@ -1,7 +1,7 @@
 import unittest
-import errors
-import handling
-import email_handler
+from src import errors
+from src import handling
+from src import email_handler
 
 class ERROR_tests(unittest.TestCase):
     def test_error(self):

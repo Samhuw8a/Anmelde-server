@@ -1,5 +1,7 @@
 {
 	"trused_mail_suffix":[
 		"@sluz.ch"
-	]
+	],
+	"token_email": "template/email.txt",
+	"false_username_email": "template/false_username.txt"
 }

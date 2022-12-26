@@ -1,6 +1,7 @@
 import smtplib
 import ssl
 from src.errors import Error
+from src.handling import User
 from   email.mime.text import MIMEText
 from   email.mime.multipart import MIMEMultipart
 
@@ -17,25 +18,27 @@ class Email_server():
         with open(file_name,"r") as f:
             self.message = f.read().strip()
 
-    def send(self,mail:str,token:int, name:str)->None:
-        self.message = self.message.replace("{mail}",mail)
-        self.message = self.message.replace("{token}",str(token))
-        self.message = self.message.replace("{name}",name)
+    def send(self,user:User)->None:
+        self.message = self.message.replace("{mail}",user.mail)
+        self.message = self.message.replace("{token}",str(user.token))
+        self.message = self.message.replace("{name}",user.name)
+        self.message = self.message.replace("{name}",user.username)
         msg = MIMEMultipart()
         msg["From"] = self.sender
-        msg["To"] = mail
+        msg["To"] = user.mail
         msg["Subject"] = self.subject
         msg.attach(MIMEText(self.message,"plain","utf-8"))
         text = msg.as_string()
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL(self.server, self.port, context=context) as server:
             server.login(self.sender, self.pswrd)
-            server.sendmail(self.sender, mail, text)
+            server.sendmail(self.sender, user.mail, text)
     
 def main()->None:
     serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
+    samuel=User("samuel.huwiler@gmx.ch","samhuw_8a","Samuel")
     serv.load_from_template("template/test_mail.txt")
-    serv.send("samuel.huwiler@gmx.ch",123,"same")
+    serv.send(samuel)
 
 if __name__=="__main__":
     main()

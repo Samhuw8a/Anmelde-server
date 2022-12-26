@@ -4,6 +4,7 @@ import sqlalchemy
 import pandas as pd
 from   src.errors import Error
 import time
+import json
 
 class User():
     def __init__(self,mail:str,username:str,name:str) -> None:
@@ -32,6 +33,9 @@ class Parser():
         "mcrcon_password" : str(config['credentials']['mcpassword']),
         }
 
+    def load_settings(self,path:str)->dict:
+        with open(path) as f:
+            return json.load(f)
 
     def get_user(self, dbframe:pd.DataFrame)->User:
         mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
