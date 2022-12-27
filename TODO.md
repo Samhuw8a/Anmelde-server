@@ -1,5 +1,6 @@
 # TODO:
 
+- [ ] PFAD AUTO COMPLETE
 - [x] handling awaittoken
 - [ ] parse mcrcon response
 - [ ] tests

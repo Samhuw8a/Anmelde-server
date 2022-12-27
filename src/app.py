@@ -1,4 +1,4 @@
-from src.main import Event_handler
+from main import Event_handler
 import time
 
 def main()->None:
