@@ -1,6 +1,5 @@
 import smtplib
 import ssl
-from src.errors import Error
 from src.handling import User
 from   email.mime.text import MIMEText
 from   email.mime.multipart import MIMEMultipart
