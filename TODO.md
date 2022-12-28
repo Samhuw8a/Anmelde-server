@@ -1,9 +1,9 @@
 # TODO:
 
-- [ ] PFAD AUTO COMPLETE
+- [x] PFAD AUTO COMPLETE
 - [x] handling awaittoken
-- [ ] parse mcrcon response
-- [ ] tests
+- [x] parse mcrcon response
+- [x] tests
 - [x] event handling
 - [ ] saubere Mails
 - [x] error impelmentierung

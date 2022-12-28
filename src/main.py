@@ -15,6 +15,7 @@ class Event_handler():
         self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",config["mail_password"])
         self.trusted_mail_suffix = self.settings["trusted_mail_suffix"]
 
+        self.emailer.load_from_template(self.settings["token_email"])
     def is_done(self,user:User)->None:
         self.handler.sql_update(f"UPDATE registration SET reg_done = 1.0 WHERE reg_mail = '{user.mail}'")
     def is_undone(self,user:User)->None:

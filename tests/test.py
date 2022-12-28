@@ -5,4 +5,4 @@ from test_email_handler import *
 from test_main import *
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
