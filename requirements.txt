@@ -1,4 +1,4 @@
 sqlalchemy
 pymysql
 pandas
-mcrco
+mcrcon
