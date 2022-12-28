@@ -1,5 +1,6 @@
 import smtplib
 import ssl
+import os
 from handling import User
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -14,7 +15,8 @@ class Email_server():
         self.message:str = "Hello_world"
 
     def load_from_template(self,file_name:str)->None:
-        with open(file_name,"r") as f:
+        #  path = os.path.dirname(__file__)+file_name
+        with open(os.path.dirname(__file__)+file_name,"r") as f:
             self.message = f.read().strip()
 
     def send(self,user:User)->None:
@@ -36,7 +38,7 @@ class Email_server():
 def main()->None:
     serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
     samuel=User("samuel.huwiler@gmx.ch","samhuw_8a","Samuel")
-    serv.load_from_template("template/test_mail.txt")
+    serv.load_from_template("/../template/test_mail.txt")
     serv.send(samuel)
 
 if __name__=="__main__":

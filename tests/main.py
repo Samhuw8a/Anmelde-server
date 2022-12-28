@@ -3,8 +3,8 @@ from email_handler import Email_server
 from errors import Error
 import random
 
-SETTINGS ="settings.json" 
-CONFIG ="config.ini" 
+SETTINGS ="/../settings.json" 
+CONFIG ="/../config.ini" 
 
 class Event_handler():
     def __init__(self)->None:

@@ -5,6 +5,8 @@ import pandas as pd
 from   errors import Error
 import time
 import json
+import os
+import re
 from typing import Optional
 
 class User():
@@ -33,6 +35,7 @@ class Parser():
         pass
 
     def load_config(self,path:str)->dict:
+        path = os.path.dirname(__file__)+path
         config=ConfigParser(interpolation=None)
         config.read(path)
         return {
@@ -46,6 +49,7 @@ class Parser():
         }
 
     def load_settings(self,path:str)->dict:
+        path = os.path.dirname(__file__)+path
         with open(path) as f:
             return json.load(f)
 
@@ -57,7 +61,10 @@ class Parser():
 
     def mc_call(self,resp:str)->bool:
         # TODO: response als registriet oder falscher username identifizieren.
-        return True
+        whitelist_add = re.compile("Added (\w*?) to the whitelist")
+        if re.fullmatch(whitelist_add,resp.strip()):
+            return True
+        return False
 
 class Handler():
 
@@ -75,6 +82,7 @@ class Handler():
         return pd.read_sql(str(cmd),
                            con=engine
                           )
+
     def sql_update(self,cmd:str)->pd.DataFrame:
         engine = sqlalchemy.create_engine(
             f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
@@ -110,11 +118,10 @@ class Handler():
 
 def main()->None:
     p = Parser()
-    conf = p.load_config("config.ini")
+    conf = p.load_config("/../config.ini")
     h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     u = User("samuel.huwiler@gmx.ch","test","samuel")
-    u.token= 111_111
-    print(h.await_token(u))
+    resp = h.mcrcon_call("Whitelist remove deez")
 
 if __name__ == "__main__":
     main()

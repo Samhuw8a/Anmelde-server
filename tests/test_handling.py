@@ -28,10 +28,18 @@ class test_Parser(unittest.TestCase):
 
     def test_config(self):
         test_config={ "db_username": "register", "db_password":"**************", "db_server_ip":"185.101.158.55", "db_database":"Registration", "db_table":"registration", "mail_password":"**************", "mcrcon_password":"***************", }
-        
-        self.assertDictEqual(self.parser.load_config("test_config.ini"),test_config)
+        self.assertDictEqual(self.parser.load_config("/test_config.ini"),test_config)
 
-        #TODO: get_user,mc_call,load_settings
+    def test_mcrcon(self):
+        add_resp = "Added test to the whitelist"
+        self.assertTrue(self.parser.mc_call(add_resp))
+        self.assertFalse(self.parser.mc_call("Player does not exist"))
+        self.assertFalse(self.parser.mc_call("Added to the whitelist"))
+        self.assertFalse(self.parser.mc_call(""))
+        self.assertFalse(self.parser.mc_call("Added to the Whitelist"))
+
+    #TODO: get_user,load_settings
+
 
 if __name__ == "__main__":
     unittest.main()
