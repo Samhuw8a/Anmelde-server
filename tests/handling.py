@@ -7,7 +7,16 @@ import time
 import json
 import os
 import re
-from typing import Optional
+from typing import Optional, List
+from dataclasses import dataclass
+
+@dataclass
+class Settings():
+    trusted_mail_suffix  : List[str]
+    token_email          : str
+    false_username_email : str
+    output               : bool
+
 
 class User():
     def __init__(self,mail:str,username:str,name:str) -> None:
@@ -48,10 +57,12 @@ class Parser():
         "mcrcon_password" : str(config['credentials']['mcpassword']),
         }
 
-    def load_settings(self,path:str)->dict:
+    def load_settings(self,path:str)->Settings:
         path = os.path.dirname(__file__)+path
         with open(path) as f:
-            return json.load(f)
+            data= json.load(f)
+            sett= Settings(**data)
+            return sett
 
     def get_user(self, dbframe:pd.DataFrame)->User:
         mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
@@ -120,8 +131,9 @@ def main()->None:
     p = Parser()
     conf = p.load_config("/../config.ini")
     h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
+    p.load_settings("/../settings.json")
     u = User("samuel.huwiler@gmx.ch","test","samuel")
-    resp = h.mcrcon_call("Whitelist remove deez")
+    #  resp = h.mcrcon_call("Whitelist remove deez")
 
 if __name__ == "__main__":
     main()

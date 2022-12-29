@@ -3,5 +3,6 @@
 		"@sluz.ch"
 	],
 	"token_email": "/../template/Anmelde_mail.txt",
-	"false_username_email": "/../template/false_username.txt"
+	"false_username_email": "/../template/false_username.txt",
+	"output": true
 }
