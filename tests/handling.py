@@ -8,15 +8,23 @@ import json
 import os
 import re
 from typing import Optional, List
-from dataclasses import dataclass
+from pydantic import BaseModel,validator,ValidationError
 
-@dataclass
-class Settings():
+class Settings(BaseModel):
     trusted_mail_suffix  : List[str]
-    token_email          : str
-    false_username_email : str
-    output               : bool
+    token_email          : str      
+    false_username_email : str      
+    output               : bool     
 
+    @validator("trusted_mail_suffix")
+    @classmethod
+    def is_correct_list(cls,tms:list)-> list:
+        email=re.compile("@(\w*)\.(\w*)")
+        for el in tms:
+            if not re.fullmatch(email,el):
+                raise Error(f"Kein korrektes Email format: {el}")
+            
+        return tms
 
 class User():
     def __init__(self,mail:str,username:str,name:str) -> None:

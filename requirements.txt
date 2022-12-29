@@ -2,3 +2,4 @@ sqlalchemy
 pymysql
 pandas
 mcrcon
+pydantic
