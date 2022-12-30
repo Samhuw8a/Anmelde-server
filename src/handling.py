@@ -157,7 +157,7 @@ def main()->None:
             h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
             print("----")
             results +=1
-        except pymysql.OperationalError: 
+        except:
             pass
     print(f"{results}/10000")
 

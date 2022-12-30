@@ -1,5 +1,6 @@
 sqlalchemy
 pymysql
+types-PyMySQL
 pandas
 mcrcon
 pydantic
