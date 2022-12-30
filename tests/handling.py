@@ -1,5 +1,6 @@
 from   configparser import ConfigParser
 from   mcrcon import MCRcon
+import pymysql
 import sqlalchemy
 import pandas as pd
 from   errors import Error
@@ -156,7 +157,7 @@ def main()->None:
             h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
             print("----")
             results +=1
-        except sqlalchemy.exec.OperationalError: 
+        except pymysql.err.OperationalError: 
             pass
     print(f"{results}/10000")
 
