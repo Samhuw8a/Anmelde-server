@@ -8,7 +8,7 @@ import json
 import os
 import re
 from typing import Optional, List
-from pydantic import BaseModel,validator,ValidationError
+from pydantic import BaseModel,validator
 
 class Settings(BaseModel):
     trusted_mail_suffix  : List[str]
@@ -95,6 +95,13 @@ class Handler():
         self.token_limit:int = 3
         self.timeout:int     = 5*60
 
+    def sql_call_informatik(self,cmd:str)->pd.DataFrame:
+        engine = sqlalchemy.create_engine(
+            f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/informatik")
+        return pd.read_sql(str(cmd),
+                           con=engine
+                          )
+
     def sql_call(self,cmd:str)->pd.DataFrame:
         engine = sqlalchemy.create_engine(
             f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
@@ -138,10 +145,19 @@ class Handler():
 def main()->None:
     p = Parser()
     conf = p.load_config("/../config.ini")
-    h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
+    #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     p.load_settings("/../settings.json")
     u = User("samuel.huwiler@gmx.ch","test","samuel")
-    #  resp = h.mcrcon_call("Whitelist remove deez")
+
+    h = Handler("ksruser","PLbLYYSgGvfqC4j",conf["db_server_ip"],conf["mcrcon_password"])
+    results=0
+    print(res)
+    for _ in range(10_000):
+        try:
+            h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
+            results +=1
+        except : pass
+    print(f"{results}/10000")
 
 if __name__ == "__main__":
     main()
