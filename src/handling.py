@@ -156,8 +156,8 @@ def main()->None:
             h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
             print("----")
             results +=1
-        except KeyboardInterupt: 
-            exit(1)
+        except sqlalchemy.exec.OperationalError: 
+            pass
     print(f"{results}/10000")
 
 if __name__ == "__main__":
