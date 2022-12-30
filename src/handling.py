@@ -152,13 +152,13 @@ def main()->None:
 
     h = Handler("ksruser","PLbLYYSgGvfqC4j",conf["db_server_ip"],conf["mcrcon_password"])
     results=0
-    for _ in range(10_000):
+    for _ in range(1_000):
         try:
             h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
             print("----")
             results +=1
         except:
-            pass
+            print("False")
     print(f"{results}/10000")
 
 if __name__ == "__main__":
