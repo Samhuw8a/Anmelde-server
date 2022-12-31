@@ -11,6 +11,16 @@ import re
 from typing import Optional, List
 from pydantic import BaseModel,validator
 
+class Config(BaseModel):
+    db_username     : str
+    db_password     : str
+    db_server_ip    : str
+    db_database     : str
+    db_table        : str
+    mail_password   : str
+    mcrcon_password : str
+
+
 class Settings(BaseModel):
     trusted_mail_suffix  : List[str]
     token_email          : str      
@@ -35,12 +45,12 @@ class User():
         self.token_internal:Optional[int] = None
 
     @property
-    def token(self):
+    def token(self)->int:
         return self.token_internal if self.token_internal else 0
 
 
     @token.setter
-    def token(self,token:int):
+    def token(self,token:int)->None:
         if isinstance(token, int):
             self.token_internal = token
         else: raise Error("kein korrekter token")
@@ -52,19 +62,19 @@ class Parser():
     def __init__(self) -> None:
         pass
 
-    def load_config(self,path:str)->dict:
+    def load_config(self,path:str)->Config:
         path = os.path.dirname(__file__)+path
         config=ConfigParser(interpolation=None)
         config.read(path)
-        return {
-        "db_username"     : str(config['credentials']['user']),
-        "db_password"     : str(config['credentials']['password_db']),
-        "db_server_ip"    : str(config['db']['server_ip']),
-        "db_database"     : str(config['db']['db']),
-        "db_table"        : str(config['db']['table']),
-        "mail_password"   : str(config['credentials']['password_web']),
-        "mcrcon_password" : str(config['credentials']['mcpassword']),
-        }
+        return Config(
+            db_username     = str(config['credentials']['user']),
+            db_password     = str(config['credentials']['password_db']),
+            db_server_ip    = str(config['db']['server_ip']),
+            db_database     = str(config['db']['db']),
+            db_table        = str(config['db']['table']),
+            mail_password   = str(config['credentials']['password_web']),
+            mcrcon_password = str(config['credentials']['mcpassword']),
+        )
 
     def load_settings(self,path:str)->Settings:
         path = os.path.dirname(__file__)+path
@@ -149,17 +159,7 @@ def main()->None:
     #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")
-
-    h = Handler("ksruser","PLbLYYSgGvfqC4j",conf["db_server_ip"],conf["mcrcon_password"])
-    results=0
-    for _ in range(10_000):
-        try:
-            h.sql_call_informatik("SELECT country_stats.population FROM countries, country_stats WHERE countries.country_id = country_stats.country_id AND country_stats.year = '2005' AND countries.name = 'Switzerland';")
-            print("----")
-            results +=1
-        except:
-            pass
-    print(f"{results}/10000")
+    h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
 
 if __name__ == "__main__":
     main()

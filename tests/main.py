@@ -1,4 +1,4 @@
-from handling import Handler, Parser, User, Settings
+from handling import Handler, Parser, User, Settings, Config
 from email_handler import Email_server
 from errors import Error
 import random
@@ -11,9 +11,9 @@ class Event_handler():
     def __init__(self)->None:
         self.parser              = Parser()
         self.settings:Settings   = self.parser.load_settings(SETTINGS)
-        config:dict              = self.parser.load_config(CONFIG)
-        self.handler             = Handler(config["db_username"],config["db_password"],config["db_server_ip"],config["mcrcon_password"])
-        self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",config["mail_password"])
+        config:Config            = self.parser.load_config(CONFIG)
+        self.handler             = Handler(config.db_username,config.db_password,config.db_server_ip,config.mcrcon_password)
+        self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",config.mail_password)
 
         self.emailer.load_from_template(self.settings.token_email)
     def is_done(self,user:User)->None:
@@ -42,7 +42,7 @@ class Event_handler():
         user.token =  random.randint(1_000_000, 999_999_999)
 
         self.emailer.load_from_template(self.settings.token_email)
-        self.emailer.send(user)
+        self.emailer.send(user,"Deine Registration bei KSRMinecraft")
 
         try: is_valid = self.handler.await_token(user)
         except Error as e:
@@ -58,8 +58,8 @@ class Event_handler():
         if not self.parser.mc_call(response):
             self.is_undone(user)
             self.emailer.load_from_template(self.settings.false_username_email)
-            self.emailer.send(user)
-            raise Error("falscher Username")
+            self.emailer.send(user,"Minecraftname existiert nicht")
+            raise Error("falscher Username : {user.username}")
 
         self.is_done(user)
 
