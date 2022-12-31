@@ -28,4 +28,5 @@ jobs:
           mypy --ignore-missing-imports --disallow-untyped-calls src
       - name: Test with pytest
         run: |
+          ./links.sh
           python tests/test.py
