@@ -28,8 +28,8 @@ class test_Parser(unittest.TestCase):
         self.parser = Parser()
 
     def test_load_config(self):
-        test_config={ "db_username": "register", "db_password":"**************", "db_server_ip":"185.101.158.55", "db_database":"Registration", "db_table":"registration", "mail_password":"**************", "mcrcon_password":"***************", }
-        self.assertDictEqual(self.parser.load_config("/test_config.ini"),test_config)
+        test_config=Config( db_username= "register", db_password= "**************", db_server_ip= "185.101.158.55", db_database= "Registration", db_table= "registration", mail_password= "**************", mcrcon_password= "***************")
+        self.assertEqual(self.parser.load_config("/test_config.ini"),test_config)
 
     def test_mcrcon(self):
         add_resp = "Added test to the whitelist"
