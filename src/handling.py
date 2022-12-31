@@ -160,6 +160,5 @@ def main()->None:
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")
     h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
-
 if __name__ == "__main__":
     main()
