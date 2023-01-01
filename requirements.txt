@@ -5,3 +5,4 @@ pandas
 mcrcon
 pydantic
 pyyaml
+types-PyYAML
