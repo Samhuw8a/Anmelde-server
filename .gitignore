@@ -1,4 +1,4 @@
-config.ini
+settings.yml
 ./tests/handling.py
 ./tests/main.py
 ./tests/errors.py

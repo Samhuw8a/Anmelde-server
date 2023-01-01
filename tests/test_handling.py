@@ -27,10 +27,6 @@ class test_Parser(unittest.TestCase):
     def setUp(self):
         self.parser = Parser()
 
-    def test_load_config(self):
-        test_config=Config( db_username= "register", db_password= "**************", db_server_ip= "185.101.158.55", db_database= "Registration", db_table= "registration", mail_password= "**************", mcrcon_password= "***************")
-        self.assertEqual(self.parser.load_config("/test_config.ini"),test_config)
-
     def test_mcrcon(self):
         add_resp = "Added test to the whitelist"
         self.assertTrue(self.parser.mc_call(add_resp))
@@ -40,11 +36,18 @@ class test_Parser(unittest.TestCase):
         self.assertFalse(self.parser.mc_call("Added to the Whitelist"))
 
     def test_load_settings(self):
-        test_settings=self.parser.load_settings("/test_settings.json") 
+        test_settings=self.parser.load_settings("/test_settings.yml") 
         self.assertIsInstance(test_settings,Settings)
-        self.assertEqual(test_settings.trusted_mail_suffix,["@test.ch"])
-        self.assertEqual(test_settings.token_email,"/../template/Anmelde_mail.txt")
-        self.assertEqual(test_settings.false_username_email,"/../template/false_username.txt")
+        self.assertEqual(test_settings.db_username          , "register")
+        self.assertEqual(test_settings.db_password          , "**************")
+        self.assertEqual(test_settings.db_server_ip         , "185.101.158.55")
+        self.assertEqual(test_settings.db_database          , "Registration")
+        self.assertEqual(test_settings.db_table             , "registration")
+        self.assertEqual(test_settings.mail_password        , "**************")
+        self.assertEqual(test_settings.mcrcon_password      , "***************")
+        self.assertEqual(test_settings.trusted_mail_suffix  , ["@test.ch"])
+        self.assertEqual(test_settings.token_email          , "/../template/Anmelde_mail.txt")
+        self.assertEqual(test_settings.false_username_email , "/../template/false_username.txt")
         self.assertTrue(test_settings.output)
 
     #TODO: get_user,load_settings
@@ -53,6 +56,13 @@ class test_Settings(unittest.TestCase):
     
     def setUp(self):
         self.settings = Settings(
+            db_username     = "test",
+            db_password     = "test",
+            db_server_ip    = "test",
+            db_database     = "test",
+            db_table        = "test",
+            mail_password   = "test",
+            mcrcon_password = "test",
             trusted_mail_suffix=["@test.ch"],
             token_email= "/token_email.txt",
             false_username_email= "/false_username_email.txt",

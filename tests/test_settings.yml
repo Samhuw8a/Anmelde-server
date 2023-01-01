@@ -1,0 +1,19 @@
+settings:
+    trusted_mail_suffix: [
+        "@test.ch"
+    ]
+    token_email: "/../template/Anmelde_mail.txt"
+    false_username_email: "/../template/false_username.txt"
+    output: true
+
+credentials:
+    password_db:  "**************"
+    password_web: "**************"
+    mcpassword:   "***************"
+
+db:
+    server_ip : "185.101.158.55"
+    db : "Registration"
+    table : "registration"
+    user: "register"
+
