@@ -19,6 +19,18 @@ class test_Settings(unittest.TestCase):
             output = True
         )
 
+    def test_paths(self):
+        self.assertRaises(Error,self.settings.set_tmail,1234)
+
+        self.assertRaises(Error,self.settings.set_tmail,"/tsetset/../")
+        self.assertRaises(Error,self.settings.set_tmail,"/test/")
+        self.assertRaises(Error,self.settings.set_tmail,".py")
+        self.settings.token_email="/../tes.test"
+
+        self.assertRaises(Error,self.settings.set_fumail,"/tsetset/../")
+        self.assertRaises(Error,self.settings.set_fumail,"/test/")
+        self.assertRaises(Error,self.settings.set_fumail,".py")
+        self.settings.false_username_email="/../tes.test"
 
     def test_server_ip(self):
         self.assertRaises(Error,self.settings.set_ip,1234)
@@ -29,6 +41,7 @@ class test_Settings(unittest.TestCase):
     def test_tms(self):
         self.assertRaises(ValidationError,self.settings.set_tms,"test")
         self.assertRaises(Error,self.settings.set_tms,["test","@sluz.ch"])
+        self.assertRaises(Error,self.settings.set_tms,["test"])
 
 if __name__ == "__main__":
     unittest.main()

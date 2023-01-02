@@ -27,6 +27,19 @@ class Settings(BaseModel):
     def set_ip(self, n:Any)->None:
         self.db_server_ip =n
 
+    def set_tmail(self,n:Any)->None:
+        self.token_email = n
+    def set_fumail(self,n:Any)->None:
+        self.false_username_email = n
+
+    @validator( "false_username_email","token_email")
+    @classmethod
+    def is_valid_path(cls,path:str)->str:
+        p=re.compile("^(\/(\w*)|(\.{1,2}))+(\.[\w*]{1,})$")
+        if not re.fullmatch(p,path):
+            raise Error("Kein korrekter Pfad")
+        return path
+
     @validator("trusted_mail_suffix")
     @classmethod
     def is_correct_list(cls,tms:list)-> list:
