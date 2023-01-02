@@ -35,7 +35,7 @@ class Settings(BaseModel):
     @validator( "false_username_email","token_email")
     @classmethod
     def is_valid_path(cls,path:str)->str:
-        p=re.compile("^(\/(\w*)|(\.{1,2}))+(\.[\w*]{1,})$")
+        p=re.compile("^(\/(\w+|\.{1,2}))+(\.\w+)$")
         if not re.fullmatch(p,path):
             raise Error("Kein korrekter Pfad")
         return path
