@@ -1,7 +1,6 @@
 import unittest
 from handling import *
 from errors import Error
-from pydantic import ValidationError 
 
 class test_User(unittest.TestCase):
     def setUp(self):
@@ -51,39 +50,6 @@ class test_Parser(unittest.TestCase):
         self.assertTrue(test_settings.output)
 
     #TODO: get_user,load_settings
-
-class test_Settings(unittest.TestCase):
-    
-    def setUp(self):
-        self.settings = Settings(
-            db_username     = "test",
-            db_password     = "test",
-            db_server_ip    = "test",
-            db_database     = "test",
-            db_table        = "test",
-            mail_password   = "test",
-            mcrcon_password = "test",
-            trusted_mail_suffix=["@test.ch"],
-            token_email= "/token_email.txt",
-            false_username_email= "/false_username_email.txt",
-            output = True
-        )
-
-    def set_tms(self,n:str)->None:
-        settings = Settings(
-            trusted_mail_suffix=n,
-            token_email= "/token_email.txt",
-            false_username_email= "/false_username_email.txt",
-            output = True
-        )
-
-    def test_Settings(self):
-        self.assertTrue(self.settings.output)
-        self.assertEqual(self.settings.trusted_mail_suffix,["@test.ch"])
-        self.assertEqual(self.settings.token_email,"/token_email.txt")
-        self.assertEqual(self.settings.false_username_email,"/false_username_email.txt")
-        self.assertRaises(ValidationError,self.set_tms,"test")
-        self.assertRaises(Error,self.set_tms,["test","@sluz.ch"])
 
 
 if __name__ == "__main__":

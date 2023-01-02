@@ -1,9 +1,10 @@
-from handling import Handler, Parser, User, Settings
+from handling import Handler, Parser, User 
+from settings_cls import Settings
 from email_handler import Email_server
 from errors import Error
 import random
 
-SETTINGS ="/../settings.yaml" 
+SETTINGS ="/../settings.yml" 
 
 
 class Event_handler():

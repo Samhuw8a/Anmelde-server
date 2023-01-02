@@ -2,6 +2,9 @@
 
 cd tests
 
+rm settings_cls.py
+ln ../src/settings_cls.py .
+
 rm handling.py
 ln ../src/handling.py .
 

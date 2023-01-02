@@ -1,4 +1,3 @@
-from   configparser import ConfigParser
 from   mcrcon import MCRcon
 import pymysql
 import sqlalchemy
@@ -9,30 +8,7 @@ import yaml
 import os
 import re
 from typing import Optional, List
-from pydantic import BaseModel,validator
-
-class Settings(BaseModel):
-    db_username     : str
-    db_password     : str
-    db_server_ip    : str
-    db_database     : str
-    db_table        : str
-    mail_password   : str
-    mcrcon_password : str
-
-    trusted_mail_suffix  : List[str]
-    token_email          : str      
-    false_username_email : str      
-    output               : bool     
-
-    @validator("trusted_mail_suffix")
-    @classmethod
-    def is_correct_list(cls,tms:list)-> list:
-        email=re.compile("@(\w*)\.(\w*)")
-        for el in tms:
-            if not re.fullmatch(email,el):
-                raise Error(f"Kein korrektes Email format: {el}")
-        return tms
+from settings_cls import Settings
 
 class User():
     def __init__(self,mail:str,username:str,name:str) -> None:
