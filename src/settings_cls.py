@@ -43,7 +43,7 @@ class Settings(BaseModel):
     @validator("trusted_mail_suffix")
     @classmethod
     def is_correct_list(cls,tms:list)-> list:
-        email=re.compile("@(\w*)\.(\w*)")
+        email=re.compile("(\w*)\.(\w*)")
         for el in tms:
             if not re.fullmatch(email,el):
                 raise Error(f"Kein korrektes Email format: {el}")

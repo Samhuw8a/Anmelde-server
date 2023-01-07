@@ -76,13 +76,6 @@ class Handler():
         self.token_limit:int = 3
         self.timeout:int     = 5*60
 
-    def sql_call_informatik(self,cmd:str)->pd.DataFrame:
-        engine = sqlalchemy.create_engine(
-            f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/informatik")
-        return pd.read_sql(str(cmd),
-                           con=engine
-                          )
-
     def sql_call(self,cmd:str)->pd.DataFrame:
         engine = sqlalchemy.create_engine(
             f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
@@ -105,7 +98,7 @@ class Handler():
             sql = self.sql_call(f"SELECT token FROM registration WHERE reg_mail = '{user.mail}'")
             if sql.empty:
                 raise Error("Es gibt kein user")
-            token = sql.split()[-1]
+            token = str(sql).split()[-1]
 
             if token != "None":
                 counter +=1

@@ -13,7 +13,7 @@ class test_Settings(unittest.TestCase):
             db_table        = "test",
             mail_password   = "test",
             mcrcon_password = "test",
-            trusted_mail_suffix=["@test.ch"],
+            trusted_mail_suffix=["test.ch"],
             token_email= "/token_email.txt",
             false_username_email= "/false_username_email.txt",
             output = True

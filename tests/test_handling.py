@@ -44,7 +44,7 @@ class test_Parser(unittest.TestCase):
         self.assertEqual(test_settings.db_table             , "registration")
         self.assertEqual(test_settings.mail_password        , "**************")
         self.assertEqual(test_settings.mcrcon_password      , "***************")
-        self.assertEqual(test_settings.trusted_mail_suffix  , ["@test.ch"])
+        self.assertEqual(test_settings.trusted_mail_suffix  , ["test.ch"])
         self.assertEqual(test_settings.token_email          , "/../template/Anmelde_mail.txt")
         self.assertEqual(test_settings.false_username_email , "/../template/false_username.txt")
         self.assertTrue(test_settings.output)

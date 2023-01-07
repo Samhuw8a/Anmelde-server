@@ -34,9 +34,10 @@ class Event_handler():
             print("Neuer User:")
             print(user)
 
-        if user.mail.strip()[-8:] not in self.settings.trusted_mail_suffix:
+        mail_addr = user.mail.split("@")[-1]
+        if mail_addr not in self.settings.trusted_mail_suffix:
             self.is_undone(user)
-            raise Error(f"keine valide email adresse: {user.mail}")
+            raise Error(f"keine valide email adresse: {mail_addr}")
 
         user.token =  random.randint(1_000_000, 999_999_999)
 
