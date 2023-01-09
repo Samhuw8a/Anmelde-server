@@ -36,7 +36,7 @@ class Email_server():
     
 def main()->None:
     serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
-    samuel=User("samuel.huwiler@gmx.ch","samhuw_8a","Samuel")
+    samuel=User(mail= "samuel.huwiler@gmx.ch",username = "samhuw_8a",name="Samuel")
     serv.load_from_template("/../tests/test_mail.txt")
     serv.send(samuel,"Test_mail")
 
