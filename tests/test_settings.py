@@ -4,6 +4,21 @@ from settings_cls import *
 from pydantic import ValidationError 
 
 class test_Settings(unittest.TestCase):
+    def set_false_args(self):
+        self.settings = Settings(
+            db_username     = "",
+            db_password     = "test",
+            db_server_ip    = "0.0.0.0",
+            db_database     = "test",
+            db_table        = "test",
+            mail_password   = "test",
+            mcrcon_password = "test",
+            trusted_mail_suffix=["test.ch"],
+            token_email= "/token_email.txt",
+            false_username_email= "/false_username_email.txt",
+            output = True
+        )
+
     def setUp(self):
         self.settings = Settings(
             db_username     = "test",
@@ -18,6 +33,9 @@ class test_Settings(unittest.TestCase):
             false_username_email= "/false_username_email.txt",
             output = True
         )
+
+    def test_false_args(self):
+        self.assertRaises(Error, self.set_false_args)
 
     def test_paths(self):
         self.assertRaises(Error,self.settings.set_tmail,1234)

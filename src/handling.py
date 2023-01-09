@@ -7,29 +7,49 @@ import time
 import yaml
 import os
 import re
-from typing import Optional, List
+from typing import Optional, Any
 from settings_cls import Settings
+from pydantic import BaseModel, validator
 
-class User():
-    def __init__(self,mail:str,username:str,name:str) -> None:
-        self.mail:str                     = mail 
-        self.username:str                 = username
-        self.name:str                     = name
-        self.token_internal:Optional[int] = None
+class User(BaseModel):
+    class Config:
+        validate_assignment = True
 
-    @property
-    def token(self)->int:
-        return self.token_internal if self.token_internal else 0
+    mail: str
+    username: str
+    name: str
+    token:int = 0
 
+    def __init__(self, **data: Any) -> None:
+        super().__init__(**data)
+        if not all(list(
+            map(bool,
+                filter(lambda x : not isinstance(x,int),
+                       self.__dict__.values())
+               )
+        )):
+            raise Error("einige Felder sind nicht ausgefühlt")
 
-    @token.setter
-    def token(self,token:int)->None:
-        if isinstance(token, int):
-            self.token_internal = token
-        else: raise Error("kein korrekter token")
-
-    def __repr__(self) -> str:
-        return f"User({self.mail},{self.username},{self.name})"
+#  class User():
+#      def __init__(self,mail:str,username:str,name:str) -> None:
+#          self.mail:str                     = mail
+#          self.username:str                 = username
+#          self.name:str                     = name
+#          self.__token:Optional[int] = None
+#
+#      @property
+#      def token(self)->int:
+#          return self.__token if self.__token else 0
+#
+#
+#      @token.setter
+#      def token(self,token:int)->None:
+#          if isinstance(token, int):
+#              self.__token = token
+#          else: raise Error("kein korrekter token")
+#
+#      def __repr__(self) -> str:
+#          return f"User({self.mail},{self.username},{self.name})"
 
 class Parser():
     def __init__(self) -> None:
@@ -57,7 +77,7 @@ class Parser():
         mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
         username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
         name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
-        return User(mail,username,name)
+        return User(mail=mail,username=username,name=name)
 
     def mc_call(self,resp:str)->bool:
         # TODO: response als registriet oder falscher username identifizieren.
@@ -117,11 +137,13 @@ class Handler():
         return resp
 
 def main()->None:
-    p = Parser()
-    conf = p.load_settings("/../settings.yml")
+    #  p = Parser()
+    #  conf = p.load_settings("/../settings.yml")
+    u = User( mail= "test", username = "test", name= "test")     
+    print(u)
     #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")
-    h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
+    #  h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
 if __name__ == "__main__":
     main()

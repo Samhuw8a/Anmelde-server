@@ -21,6 +21,12 @@ class Settings(BaseModel):
     false_username_email : str      
     output               : bool     
 
+    def __init__(self, **data: Any) -> None:
+        super().__init__(**data)
+        if not all(list(map(bool,self.__dict__.values()))):
+            raise Error("einige Felder sind nicht ausgefühlt")
+
+
     def set_tms(self, n:Any)->None:
         self.trusted_mail_suffix =n
 
