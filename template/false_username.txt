@@ -1,0 +1,13 @@
+Liebe/r {mail}
+
+Dein angegebener Benutzername wurde von Mojang nicht verifiziert: 
+
+{username}
+[Server] INFO That player does not exist
+
+Um unserem Server zu joinen, brauchst du einen gültigen Minectaftaccount -> https://www.minecraft.net
+Bitte nochmals registrieren!
+
+Freundliche Grüsse
+
+KSR-Minecraft-Team

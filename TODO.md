@@ -1,5 +1,8 @@
 # TODO:
 
+- [ ] Connection test
+- [ ] Pfad validator Settings
+
 - [x] PFAD AUTO COMPLETE
 - [x] handling awaittoken
 - [x] parse mcrcon response

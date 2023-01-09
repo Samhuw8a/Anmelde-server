@@ -1,74 +1,83 @@
-from   configparser import ConfigParser
 from   mcrcon import MCRcon
+import pymysql
 import sqlalchemy
 import pandas as pd
 from   errors import Error
 import time
-import json
+import yaml
 import os
 import re
-from typing import Optional, List
-from dataclasses import dataclass
+from typing import Optional, Any
+from settings_cls import Settings
+from pydantic import BaseModel, validator
 
-@dataclass
-class Settings():
-    trusted_mail_suffix  : List[str]
-    token_email          : str
-    false_username_email : str
-    output               : bool
+class User(BaseModel):
+    class Config:
+        validate_assignment = True
 
+    mail: str
+    username: str
+    name: str
+    token:int = 0
 
-class User():
-    def __init__(self,mail:str,username:str,name:str) -> None:
-        self.mail:str                     = mail 
-        self.username:str                 = username
-        self.name:str                     = name
-        self.token_internal:Optional[int] = None
+    def __init__(self, **data: Any) -> None:
+        super().__init__(**data)
+        if not all(list(
+            map(bool,
+                filter(lambda x : not isinstance(x,int),
+                       self.__dict__.values())
+               )
+        )):
+            raise Error("einige Felder sind nicht ausgefühlt")
 
-    @property
-    def token(self):
-        return self.token_internal if self.token_internal else 0
-
-
-    @token.setter
-    def token(self,token:int):
-        if isinstance(token, int):
-            self.token_internal = token
-        else: raise Error("kein korrekter token")
-
-    def __repr__(self) -> str:
-        return f"User({self.mail},{self.username},{self.name})"
+#  class User():
+#      def __init__(self,mail:str,username:str,name:str) -> None:
+#          self.mail:str                     = mail
+#          self.username:str                 = username
+#          self.name:str                     = name
+#          self.__token:Optional[int] = None
+#
+#      @property
+#      def token(self)->int:
+#          return self.__token if self.__token else 0
+#
+#
+#      @token.setter
+#      def token(self,token:int)->None:
+#          if isinstance(token, int):
+#              self.__token = token
+#          else: raise Error("kein korrekter token")
+#
+#      def __repr__(self) -> str:
+#          return f"User({self.mail},{self.username},{self.name})"
 
 class Parser():
     def __init__(self) -> None:
         pass
 
-    def load_config(self,path:str)->dict:
-        path = os.path.dirname(__file__)+path
-        config=ConfigParser(interpolation=None)
-        config.read(path)
-        return {
-        "db_username"     : str(config['credentials']['user']),
-        "db_password"     : str(config['credentials']['password_db']),
-        "db_server_ip"    : str(config['db']['server_ip']),
-        "db_database"     : str(config['db']['db']),
-        "db_table"        : str(config['db']['table']),
-        "mail_password"   : str(config['credentials']['password_web']),
-        "mcrcon_password" : str(config['credentials']['mcpassword']),
-        }
-
     def load_settings(self,path:str)->Settings:
         path = os.path.dirname(__file__)+path
         with open(path) as f:
-            data= json.load(f)
-            sett= Settings(**data)
-            return sett
+            settings = yaml.load(f,Loader=yaml.FullLoader)
+            return Settings(
+                db_username          = settings['db']['user'],
+                db_password          = settings['credentials']['password_db'],
+                db_server_ip         = settings['db']['server_ip'],
+                db_database          = settings['db']['db'],
+                db_table             = settings['db']['table'],
+                mail_password        = settings['credentials']['password_web'],
+                mcrcon_password      = settings['credentials']['mcpassword'],
+                trusted_mail_suffix  = settings["settings"]["trusted_mail_suffix"],
+                token_email          = settings["settings"]["token_email"],
+                false_username_email = settings["settings"]["false_username_email"],
+                output               = settings["settings"]["output"],
+            )
 
     def get_user(self, dbframe:pd.DataFrame)->User:
         mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
         username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
         name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
-        return User(mail,username,name)
+        return User(mail=mail,username=username,name=name)
 
     def mc_call(self,resp:str)->bool:
         # TODO: response als registriet oder falscher username identifizieren.
@@ -109,7 +118,7 @@ class Handler():
             sql = self.sql_call(f"SELECT token FROM registration WHERE reg_mail = '{user.mail}'")
             if sql.empty:
                 raise Error("Es gibt kein user")
-            token = sql.split()[-1]
+            token = str(sql).split()[-1]
 
             if token != "None":
                 counter +=1
@@ -128,12 +137,13 @@ class Handler():
         return resp
 
 def main()->None:
-    p = Parser()
-    conf = p.load_config("/../config.ini")
-    h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
-    p.load_settings("/../settings.json")
-    u = User("samuel.huwiler@gmx.ch","test","samuel")
-    #  resp = h.mcrcon_call("Whitelist remove deez")
-
+    #  p = Parser()
+    #  conf = p.load_settings("/../settings.yml")
+    u = User( mail= "test", username = "test", name= "test")     
+    print(u)
+    #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
+    #p.load_settings("/../settings.json")
+    #u = User("samuel.huwiler@gmx.ch","test","samuel")
+    #  h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
 if __name__ == "__main__":
     main()

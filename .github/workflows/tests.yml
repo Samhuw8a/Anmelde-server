@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os : [ubuntu-latest, macos-latest, windows-latest]
+        os : [ubuntu-latest, macos-latest]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
@@ -28,4 +28,5 @@ jobs:
           mypy --ignore-missing-imports --disallow-untyped-calls src
       - name: Test with pytest
         run: |
+          ./links.sh
           python tests/test.py
