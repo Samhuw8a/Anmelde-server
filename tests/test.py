@@ -4,7 +4,6 @@ from test_handling import *
 from test_email_handler import *
 from test_main import *
 from test_settings import *
-from test_logger import *
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

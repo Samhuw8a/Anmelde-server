@@ -18,6 +18,7 @@ class Settings(BaseModel):
 
     trusted_mail_suffix  : List[str]
     token_email          : str      
+    logs                 : str
     false_username_email : str      
     output               : bool     
 

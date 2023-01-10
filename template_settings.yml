@@ -4,6 +4,7 @@ settings:
     ]
     token_email: "/../template/Anmelde_mail.txt"
     false_username_email: "/../template/false_username.txt"
+    logs : "/../logs/"
     output: true
 
 credentials:

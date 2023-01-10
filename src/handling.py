@@ -50,8 +50,9 @@ class Parser():
                 db_table             = settings['db']['table'],
                 mail_password        = settings['credentials']['password_web'],
                 mcrcon_password      = settings['credentials']['mcpassword'],
-                trusted_mail_suffix  = settings["settings"]["trusted_mail_suffix"],
+                trusted_mail_suffix  = settings['settings']["trusted_mail_suffix"],
                 token_email          = settings["settings"]["token_email"],
+                logs                 = settings['settings']['logs'],
                 false_username_email = settings["settings"]["false_username_email"],
                 output               = settings["settings"]["output"],
             )
@@ -130,10 +131,10 @@ class Handler():
         return resp
 
 def main()->None:
-    #  p = Parser()
-    #  conf = p.load_settings("/../settings.yml")
-    u = User( mail= "test", username = "test", name= "test")     
-    print(u)
+    p = Parser()
+    conf = p.load_settings("/../tests/test.yml")
+    #  u = User( mail= "test", username = "test", name= "test")
+    #  print(u)
     #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")

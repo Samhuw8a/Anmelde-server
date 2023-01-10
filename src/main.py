@@ -3,6 +3,7 @@ from settings_cls import Settings
 from email_handler import Email_server
 from errors import Error, UserError 
 import random
+import logging
 
 SETTINGS ="/../settings.yml" 
 
@@ -13,6 +14,7 @@ class Event_handler():
         self.settings:Settings   = self.parser.load_settings(SETTINGS)
         self.handler             = Handler(self.settings.db_username,self.settings.db_password,self.settings.db_server_ip,self.settings.mcrcon_password)
         self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",self.settings.mail_password)
+        self.logger              = self.init_logger()
 
         self.emailer.load_from_template(self.settings.token_email)
 
@@ -21,6 +23,8 @@ class Event_handler():
     def is_undone(self,user:User)->None:
         self.handler.sql_set_reg_status(user,2)
 
+    def init_logger(self)->logging.Logger:
+        raise NotImplementedError
 
     def main(self)->None:
         que = self.handler.sql_get_first_user()

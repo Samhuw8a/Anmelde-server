@@ -15,6 +15,7 @@ class test_Settings(unittest.TestCase):
             mcrcon_password = "test",
             trusted_mail_suffix=["test.ch"],
             token_email= "/token_email.txt",
+            logs            = "/../logs/",
             false_username_email= "/false_username_email.txt",
             output = True
         )
@@ -30,6 +31,7 @@ class test_Settings(unittest.TestCase):
             mcrcon_password = "test",
             trusted_mail_suffix=["test.ch"],
             token_email= "/token_email.txt",
+            logs            = "/../logs/",
             false_username_email= "/false_username_email.txt",
             output = True
         )
