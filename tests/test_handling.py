@@ -1,6 +1,6 @@
 import unittest
 from handling import *
-from errors import Error
+from errors import Error, ConfigError
 from typing import Any
 from pydantic import ValidationError
 
@@ -10,13 +10,13 @@ class test_User(unittest.TestCase):
         self.user = User(mail="Test_mail",username="Test_username",name="Test_name")
 
     def set_false_args(self):
-        self.user = User(mail="",username="Test_username",name="Test_name")
+        user = User(mail="",username="Test_username",name="Test_name")
 
     def set_token(self,token:str):
         self.user.token=token
 
     def test_false_args(self):
-        self.assertRaises(Error,self.set_false_args)
+        self.assertRaises(UserError,self.set_false_args)
 
     def test_fields(self):
         self.assertEqual(self.user.mail,"Test_mail")

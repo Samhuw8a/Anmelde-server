@@ -32,7 +32,7 @@ class User(BaseModel):
                        self.__dict__.values())
                )
         )):
-            raise Error("einige Felder sind nicht ausgefühlt")
+            raise UserError("einige Felder sind nicht ausgefühlt")
 
 class Parser():
     def __init__(self) -> None:
