@@ -2,9 +2,6 @@
 
 cd tests
 
-rm logger.py
-ln ../src/logger.py .
-
 rm settings_cls.py
 ln ../src/settings_cls.py .
 
