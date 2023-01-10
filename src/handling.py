@@ -1,15 +1,19 @@
 from   mcrcon import MCRcon
+
 import pymysql
 import sqlalchemy
 import pandas as pd
-from   errors import Error
+
 import time
 import yaml
 import os
 import re
-from typing import Optional, Any
+
 from settings_cls import Settings
 from pydantic import BaseModel, validator
+
+from typing import Optional, Any
+from errors import Error, UserError
 
 class User(BaseModel):
     class Config:
@@ -111,7 +115,8 @@ class Handler():
             if token != "None":
                 counter +=1
                 try: ret = int(token)
-                except ValueError: raise Error(f"kein korrekter Token syntax: {token}")
+                except ValueError: 
+                    raise UserError(f"kein korrekter Token syntax: {token}")
             if ret == user.token:
                 return True
 

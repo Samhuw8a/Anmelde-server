@@ -1,7 +1,7 @@
 from handling import Handler, Parser, User 
 from settings_cls import Settings
 from email_handler import Email_server
-from errors import Error
+from errors import Error, UserError 
 import random
 
 SETTINGS ="/../settings.yml" 
@@ -38,7 +38,7 @@ class Event_handler():
         mail_addr = user.mail.split("@")[-1]
         if mail_addr not in self.settings.trusted_mail_suffix:
             self.is_undone(user)
-            raise Error(f"keine valide email adresse: {mail_addr}")
+            raise UserError(f"keine valide email adresse: {mail_addr}")
 
         user.token =  random.randint(1_000_000, 999_999_999)
 
@@ -46,13 +46,13 @@ class Event_handler():
         self.emailer.send(user,"Deine Registration bei KSRMinecraft")
 
         try: is_valid = self.handler.await_token(user)
-        except Error as e:
+        except UserError as e:
             self.is_undone(user)
             raise e
 
         if not is_valid:
             self.is_undone(user)
-            raise Error("falscher token")
+            raise UserError("falscher token oder kein Token")
 
         response = self.handler.mcrcon_call(f"whitelist add {user.username}")
 
@@ -60,7 +60,7 @@ class Event_handler():
             self.is_undone(user)
             self.emailer.load_from_template(self.settings.false_username_email)
             self.emailer.send(user,"Minecraftname existiert nicht")
-            raise Error("falscher Username : {user.username}")
+            raise UserError("falscher Username : {user.username}")
 
         self.is_done(user)
 

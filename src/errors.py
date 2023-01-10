@@ -6,12 +6,18 @@ class Error(Exception):
     def __str__(self) -> str:
         return self.msg
 
+class ConfigError(Error): pass
+
+class SQLConnectionError(Error): pass
+
+class UserError(Error): pass
+
 def main()->None:
-    try:
-        raise Error("test")
-    except Error as e:
-        print(e)
-        raise e
+    raise UserError("User")
+    raise SQLConnectionError("SQL")
+    raise ConfigError("Config")
+    raise Error("Error")
+
 
 if __name__ == "__main__":
     main()
