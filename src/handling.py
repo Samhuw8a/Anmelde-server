@@ -30,27 +30,6 @@ class User(BaseModel):
         )):
             raise Error("einige Felder sind nicht ausgefühlt")
 
-#  class User():
-#      def __init__(self,mail:str,username:str,name:str) -> None:
-#          self.mail:str                     = mail
-#          self.username:str                 = username
-#          self.name:str                     = name
-#          self.__token:Optional[int] = None
-#
-#      @property
-#      def token(self)->int:
-#          return self.__token if self.__token else 0
-#
-#
-#      @token.setter
-#      def token(self,token:int)->None:
-#          if isinstance(token, int):
-#              self.__token = token
-#          else: raise Error("kein korrekter token")
-#
-#      def __repr__(self) -> str:
-#          return f"User({self.mail},{self.username},{self.name})"
-
 class Parser():
     def __init__(self) -> None:
         pass
@@ -103,11 +82,20 @@ class Handler():
                            con=engine
                           )
 
-    def sql_update(self,cmd:str)->pd.DataFrame:
+    def sql_update(self,cmd:str)->None:
         engine = sqlalchemy.create_engine(
             f"mysql+pymysql://{self.db_username}:{self.db_password}@{self.db_ip}/Registration")
         with engine.connect() as connection:
             connection.execute(sqlalchemy.text(cmd))
+
+    def sql_set_reg_status(self,user:User, status:int)->None:
+        self.sql_update(f"UPDATE registration SET reg_done = {status}.0 WHERE reg_mail = '{user.mail}'")
+
+    def sql_set_reg_comment(self,user:User, comment:str)->None:
+        self.sql_update(f"UPDATE registration SET reg_comment = {comment} WHERE reg_mail = '{user.mail}'")
+
+    def sql_get_first_user(self)->pd.DataFrame:
+        return self.sql_call("SELECT * FROM registration WHERE reg_done is Null LIMIT 1")
 
     def await_token(self,user:User)->bool:
         timeout_limit = time.time() + self.timeout
@@ -144,6 +132,5 @@ def main()->None:
     #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")
-    #  h = Handler("ksruser","PLbLYYSgGvfqC4j",conf.db_server_ip,conf.mcrcon_password)
 if __name__ == "__main__":
     main()

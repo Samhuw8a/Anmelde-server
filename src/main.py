@@ -15,14 +15,15 @@ class Event_handler():
         self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",self.settings.mail_password)
 
         self.emailer.load_from_template(self.settings.token_email)
+
     def is_done(self,user:User)->None:
-        self.handler.sql_update(f"UPDATE registration SET reg_done = 1.0 WHERE reg_mail = '{user.mail}'")
+        self.handler.sql_set_reg_status(user,1)
     def is_undone(self,user:User)->None:
-        self.handler.sql_update(f"UPDATE registration SET reg_done = 2.0 WHERE reg_mail = '{user.mail}'")
+        self.handler.sql_set_reg_status(user,2)
 
 
     def main(self)->None:
-        que = self.handler.sql_call("SELECT * FROM registration WHERE reg_done is Null LIMIT 1")
+        que = self.handler.sql_get_first_user()
 
         if que.empty:
             if self.settings.output: print("Keine neuen Einträge")
