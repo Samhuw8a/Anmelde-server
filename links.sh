@@ -2,6 +2,9 @@
 
 cd tests
 
+rm argparser.py
+ln ../src/argparser.py .
+
 rm settings_cls.py
 ln ../src/settings_cls.py .
 

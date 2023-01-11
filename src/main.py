@@ -4,17 +4,25 @@ from email_handler import Email_server
 from errors import Error, UserError 
 import random
 import logging
+import os
+import sys
 
 SETTINGS ="/../settings.yml" 
+
+LOG_FILE="/../logs/log.log"
+STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+FILE_LOGGING_FORMAT   = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+FILE_LEVEL  = logging.DEBUG
+STREAM_LEVEL= logging.DEBUG
 
 
 class Event_handler():
     def __init__(self)->None:
-        self.parser              = Parser()
-        self.settings:Settings   = self.parser.load_settings(SETTINGS)
-        self.handler             = Handler(self.settings.db_username,self.settings.db_password,self.settings.db_server_ip,self.settings.mcrcon_password)
-        self.emailer             = Email_server(465,"cap.ssl.hosttech.eu",self.settings.mail_password)
-        self.logger              = self.init_logger()
+        self.parser            = Parser()
+        self.settings:Settings = self.parser.load_settings(SETTINGS)
+        self.handler           = Handler(self.settings.db_username,self.settings.db_password,self.settings.db_server_ip,self.settings.mcrcon_password)
+        self.emailer           = Email_server(465,"cap.ssl.hosttech.eu",self.settings.mail_password)
+        self.logger            = self.init_logger()
 
         self.emailer.load_from_template(self.settings.token_email)
 
@@ -24,12 +32,29 @@ class Event_handler():
         self.handler.sql_set_reg_status(user,2)
 
     def init_logger(self)->logging.Logger:
-        raise NotImplementedError
+        path = os.path.dirname(__file__)+LOG_FILE
+
+        file_formater   = logging.Formatter(FILE_LOGGING_FORMAT)
+        stream_formater = logging.Formatter(STREAM_LOGGING_FORMAT)
+
+        streamhandler   = logging.StreamHandler(sys.stdout)
+        streamhandler.setLevel(FILE_LEVEL)
+        streamhandler.setFormatter(stream_formater)
+
+        filehandler     = logging.FileHandler(path)
+        filehandler.setFormatter(file_formater)
+        filehandler.setLevel(FILE_LEVEL)
+
+        logger = logging.Logger("main")
+        logger.addHandler(filehandler)
+        logger.addHandler(streamhandler)
+        return logger
 
     def main(self)->None:
         que = self.handler.sql_get_first_user()
 
         if que.empty:
+            self.logger.info("Test_Log")
             if self.settings.output: print("Keine neuen Einträge")
             return 
 
