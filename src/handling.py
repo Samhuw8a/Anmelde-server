@@ -13,7 +13,8 @@ from settings_cls import Settings
 from pydantic import BaseModel, validator
 
 from typing import Optional, Any
-from errors import Error, UserError
+from errors import Error, UserError, SQLError
+import logging
 
 class User(BaseModel):
     class Config:
@@ -35,8 +36,8 @@ class User(BaseModel):
             raise UserError("einige Felder sind nicht ausgefühlt")
 
 class Parser():
-    def __init__(self) -> None:
-        pass
+    def __init__(self, logger: logging.Logger) -> None:
+        self.logger = logger
 
     def load_settings(self,path:str)->Settings:
         path = os.path.dirname(__file__)+path
@@ -72,11 +73,13 @@ class Parser():
 
 class Handler():
 
-    def __init__(self,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str) -> None:
+    def __init__(self, logger:logging.Logger,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str) -> None:
+        self.logger = logger
         self.db_username:str = db_username
         self.db_password:str = db_pswrd
         self.db_ip:str       = db_server_ip
         self.mc_password:str = mc_pswrd
+        #TODO token_limit und timeout in settings
         self.token_limit:int = 3
         self.timeout:int     = 5*60
 
@@ -95,11 +98,14 @@ class Handler():
 
     def sql_set_reg_status(self,user:User, status:int)->None:
         self.sql_update(f"UPDATE registration SET reg_done = {status}.0 WHERE reg_mail = '{user.mail}'")
+        self.logger.debug(f"set reg_status for user {user.mail} to {status}")
 
     def sql_set_reg_comment(self,user:User, comment:str)->None:
         self.sql_update(f"UPDATE registration SET reg_comment = {comment} WHERE reg_mail = '{user.mail}'")
+        self.logger.debug(f"updated comment for user {user.mail}")
 
     def sql_get_first_user(self)->pd.DataFrame:
+        self.logger.debug("Getting the first Element from the db")
         return self.sql_call("SELECT * FROM registration WHERE reg_done is Null LIMIT 1")
 
     def await_token(self,user:User)->bool:
@@ -110,29 +116,40 @@ class Handler():
         while counter <=self.token_limit or time.time()>=timeout_limit:
             sql = self.sql_call(f"SELECT token FROM registration WHERE reg_mail = '{user.mail}'")
             if sql.empty:
-                raise Error("Es gibt kein user")
+                self.logger.error("SQL query didn't return a value whilst waiting for token")
+                raise SQLError("SQL query didn't return a value")
+
             token = str(sql).split()[-1]
 
             if token != "None":
                 counter +=1
                 try: ret = int(token)
                 except ValueError: 
-                    raise UserError(f"kein korrekter Token syntax: {token}")
+                    self.logger.debug("user entered an invalid token. try:{counter}")
+
             if ret == user.token:
                 return True
+            else: self.logger.debug("user entered a false token. try:{counter}")
 
+            #TODO sleep timer multiplizieren 
             time.sleep(5)
 
+        if counter <= self.token_limit:
+            self.logger.info("user took to many tries")
+        else: 
+            self.logger.info("user: {user.mail} took to long")
         return False
 
     def mcrcon_call(self,cmd:str)->str:
+        #TODO ip in settings
         with MCRcon("45.154.49.72", self.mc_password) as mcr:
             resp = mcr.command(cmd)
+            self.logger.info(resp)
         return resp
 
 def main()->None:
-    p = Parser()
-    conf = p.load_settings("/../tests/test.yml")
+    p = Parser(logging.Logger("test"))
+    conf = p.load_settings("/../tests/test_settings.yml")
     #  u = User( mail= "test", username = "test", name= "test")
     #  print(u)
     #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])

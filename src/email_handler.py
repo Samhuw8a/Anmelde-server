@@ -1,3 +1,4 @@
+import logging
 import smtplib
 import ssl
 import os
@@ -6,12 +7,17 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 class Email_server():
-    def __init__(self,port:int, server:str, pswrd:str) -> None:
-        self.port:int   = port
-        self.server:str = server
-        self.pswrd:str  = pswrd
-        self.sender:str = "no_reply@ksrminecraft.ch"
+    #TODO message loading weg
+    def __init__(self,logger:logging.Logger, port:int, server:str, pswrd:str) -> None:
+        self.logger      = logger
+        self.port:int    = port
+        self.server:str  = server
+        self.pswrd:str   = pswrd
+        #TODO sender mail in settings
+        self.sender:str  = "no_reply@ksrminecraft.ch"
         self.message:str = "Hello_world"
+
+        self.logger.debug("initialised Email_server")
 
     def load_from_template(self,file_name:str)->None:
         #  path = os.path.dirname(__file__)+file_name
@@ -35,7 +41,8 @@ class Email_server():
             server.sendmail(self.sender, user.mail, text)
     
 def main()->None:
-    serv=Email_server(465,"cap.ssl.hosttech.eu","**************")
+    log = logging.Logger("test")
+    serv=Email_server(log,465,"cap.ssl.hosttech.eu","**************")
     samuel=User(mail= "samuel.huwiler@gmx.ch",username = "samhuw_8a",name="Samuel")
     serv.load_from_template("/../tests/test_mail.txt")
     serv.send(samuel,"Test_mail")

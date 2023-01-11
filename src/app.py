@@ -1,5 +1,5 @@
 from main import Event_handler
-from errors import Error, UserError, SQLConnectionError, ConfigError
+from errors import Error, UserError, SQLError, ConfigError
 import time
 
 def beenden()->None:

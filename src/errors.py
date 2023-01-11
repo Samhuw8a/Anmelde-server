@@ -8,13 +8,13 @@ class Error(Exception):
 
 class ConfigError(Error): pass
 
-class SQLConnectionError(Error): pass
+class SQLError(Error): pass
 
 class UserError(Error): pass
 
 def main()->None:
     raise UserError("User")
-    raise SQLConnectionError("SQL")
+    raise SQLError("SQL")
     raise ConfigError("Config")
     raise Error("Error")
 

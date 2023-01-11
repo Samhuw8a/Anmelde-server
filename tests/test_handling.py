@@ -31,7 +31,9 @@ class test_User(unittest.TestCase):
 
 class test_Parser(unittest.TestCase):
     def setUp(self):
-        self.parser = Parser()
+        logger = logging.Logger("test")
+        logger.addHandler(logging.NullHandler())
+        self.parser = Parser(logger)
 
     def test_mcrcon(self):
         add_resp = "Added test to the whitelist"
