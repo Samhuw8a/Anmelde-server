@@ -62,9 +62,13 @@ class Parser():
             )
 
     def get_user(self, dbframe:pd.DataFrame)->User:
-        mail = dbframe.head(1).loc[0,:]["reg_mail"]
-        username = dbframe.head(1).loc[0,:]["reg_username"]
-        name = dbframe.head(1).loc[0,:]["reg_name"]
+        head = dbframe.head(1)
+        if head.empty:
+            raise SQLError("DataFrame is empty")
+
+        mail     = head.loc[0,:]["reg_mail"]
+        username = head.loc[0,:]["reg_username"]
+        name     = head.loc[0,:]["reg_name"]
         #  mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
         #  username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
         #  name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
