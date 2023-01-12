@@ -11,6 +11,7 @@ SETTINGS ="/../settings.yml"
 
 #TODO logging.conf
 
+OUTPUT=True
 LOG_FILE="/../logs/log.log"
 STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 FILE_LOGGING_FORMAT   = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -40,9 +41,10 @@ class Event_handler():
         file_formater   = logging.Formatter(FILE_LOGGING_FORMAT)
         stream_formater = logging.Formatter(STREAM_LOGGING_FORMAT)
 
-        streamhandler   = logging.StreamHandler(sys.stdout)
-        streamhandler.setLevel(STREAM_LEVEL)
-        streamhandler.setFormatter(stream_formater)
+        if OUTPUT:
+            streamhandler   = logging.StreamHandler(sys.stdout)
+            streamhandler.setLevel(STREAM_LEVEL)
+            streamhandler.setFormatter(stream_formater)
 
         filehandler     = logging.FileHandler(path)
         filehandler.setFormatter(file_formater)
@@ -50,14 +52,15 @@ class Event_handler():
 
         logger = logging.Logger("main")
         logger.addHandler(filehandler)
-        logger.addHandler(streamhandler)
+        if OUTPUT:
+            logger.addHandler(streamhandler)
+
         return logger
 
     def main(self)->None:
         que = self.handler.sql_get_first_user()
 
         if que.empty:
-            if self.settings.output: print("Keine neuen Einträge")
             return 
 
         user = self.parser.get_user(que)
