@@ -71,6 +71,7 @@ class Event_handler():
         if mail_addr not in self.settings.trusted_mail_suffix:
             self.logger.error(f"Kein valider Emailadressen-Suffix: {mail_addr}")
             self.is_undone(user)
+            return
 
         user.token =  random.randint(1_000_000, 999_999_999)
 
@@ -84,6 +85,7 @@ class Event_handler():
 
         if not is_valid:
             self.is_undone(user)
+            return
 
         response = self.handler.mcrcon_call(f"whitelist add {user.username}")
 
@@ -92,7 +94,6 @@ class Event_handler():
             self.emailer.load_from_template(self.settings.false_username_email)
             self.emailer.send(user,"Minecraftname existiert nicht")
             self.logger.info(f"sent false_username_email to {user.mail}")
-            raise UserError(f"falscher Username : {user.username}")
 
         self.is_done(user)
 

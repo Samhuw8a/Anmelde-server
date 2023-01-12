@@ -59,9 +59,12 @@ class Parser():
             )
 
     def get_user(self, dbframe:pd.DataFrame)->User:
-        mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
-        username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
-        name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
+        mail = dbframe.head(1).loc[0,:]["reg_mail"]
+        username = dbframe.head(1).loc[0,:]["reg_username"]
+        name = dbframe.head(1).loc[0,:]["reg_name"]
+        #  mail     = str(dbframe["reg_mail"])    .strip("0 ").partition('\n')[0]
+        #  username = str(dbframe["reg_username"]).strip("0 ").partition('\n')[0]
+        #  name     = str(dbframe["reg_name"])    .strip("0 ").partition('\n')[0]
         return User(mail=mail,username=username,name=name)
 
     def mc_call(self,resp:str)->bool:
@@ -106,7 +109,7 @@ class Handler():
 
     def sql_get_first_user(self)->pd.DataFrame:
         self.logger.debug("Getting the first Element from the db")
-        return self.sql_call("SELECT * FROM registration WHERE reg_done is Null LIMIT 1")
+        return self.sql_call("SELECT * FROM registration WHERE reg_done is Null ORDER BY reg_mail LIMIT 1")
 
     def await_token(self,user:User)->bool:
         timeout_limit = time.time() + self.timeout
@@ -129,7 +132,7 @@ class Handler():
 
             if ret == user.token:
                 return True
-            else: self.logger.debug("user entered a false token. try:{counter}")
+            elif token != "None": self.logger.debug("user entered a false token. try:{counter}")
 
             #TODO sleep timer multiplizieren 
             time.sleep(5)
@@ -149,10 +152,13 @@ class Handler():
 
 def main()->None:
     p = Parser(logging.Logger("test"))
-    conf = p.load_settings("/../tests/test_settings.yml")
+    conf = p.load_settings("/../settings.yml")
     #  u = User( mail= "test", username = "test", name= "test")
     #  print(u)
-    #  h = Handler(conf["db_username"],conf["db_password"],conf["db_server_ip"],conf["mcrcon_password"])
+    h = Handler(logging.Logger("test"),conf.db_username,conf.db_password,conf.db_server_ip,conf.mcrcon_password)
+    sq = h.sql_get_first_user()
+    u = p.get_user(sq)
+    print(u)
     #p.load_settings("/../settings.json")
     #u = User("samuel.huwiler@gmx.ch","test","samuel")
 if __name__ == "__main__":
