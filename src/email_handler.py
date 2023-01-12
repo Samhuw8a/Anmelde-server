@@ -8,13 +8,12 @@ from email.mime.multipart import MIMEMultipart
 
 class Email_server():
     #TODO message loading weg
-    def __init__(self,logger:logging.Logger, port:int, server:str, pswrd:str) -> None:
+    def __init__(self,logger:logging.Logger, port:int, server:str, pswrd:str, sender_mail:str) -> None:
         self.logger      = logger
         self.port:int    = port
         self.server:str  = server
         self.pswrd:str   = pswrd
-        #TODO sender mail in settings
-        self.sender:str  = "no_reply@ksrminecraft.ch"
+        self.sender:str  = sender_mail
         self.message:str = "Hello_world"
 
         self.logger.debug("initialised Email_server")
@@ -42,7 +41,7 @@ class Email_server():
     
 def main()->None:
     log = logging.Logger("test")
-    serv=Email_server(log,465,"cap.ssl.hosttech.eu","**************")
+    serv=Email_server(log,465,"cap.ssl.hosttech.eu","**************","no_reply@ksrminecraft.ch")
     samuel=User(mail= "samuel.huwiler@gmx.ch",username = "samhuw_8a",name="Samuel")
     serv.load_from_template("/../tests/test_mail.txt")
     serv.send(samuel,"Test_mail")

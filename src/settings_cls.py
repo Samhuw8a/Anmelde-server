@@ -15,6 +15,7 @@ class Settings(BaseModel):
     db_table        : str
     mail_password   : str
     mcrcon_password : str
+    mcrcon_ip       : str
 
     trusted_mail_suffix  : List[str]
     token_email          : str      
@@ -59,7 +60,7 @@ class Settings(BaseModel):
                 raise Error(f"Kein korrektes Email format: {el}")
         return tms
 
-    @validator("db_server_ip")
+    @validator("db_server_ip","mcrcon_ip")
     @classmethod
     def is_correct_ip(cls,ip:str)->str:
         splt=ip.split(".")

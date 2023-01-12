@@ -7,7 +7,7 @@ class MAIL_test(unittest.TestCase):
     def setUp(self):
         logger = logging.Logger("test")
         logger.addHandler(logging.NullHandler())
-        self.email_client = Email_server(logger,0,"test","passwort")
+        self.email_client = Email_server(logger,0,"test","passwort","0.0.0.0")
 
     def test_loading(self):
         self.email_client.load_from_template("/test_mail.txt")

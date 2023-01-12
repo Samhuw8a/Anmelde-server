@@ -51,6 +51,7 @@ class Parser():
                 db_table             = settings['db']['table'],
                 mail_password        = settings['credentials']['password_web'],
                 mcrcon_password      = settings['credentials']['mcpassword'],
+                mcrcon_ip            = settings['rcon']['mc_server_ip'],
                 trusted_mail_suffix  = settings['settings']["trusted_mail_suffix"],
                 logs                 = settings['settings']['logs'],
                 sender_email         = settings['email']['sender'],
@@ -75,7 +76,6 @@ class Parser():
         return User(mail=mail,username=username,name=name)
 
     def mc_call(self,resp:str)->bool:
-        # TODO: response als registriet oder falscher username identifizieren.
         whitelist_add = re.compile("Added (\w*?) to the whitelist")
         if re.fullmatch(whitelist_add,resp.strip()):
             return True
@@ -83,15 +83,14 @@ class Parser():
 
 class Handler():
 
-    def __init__(self, logger:logging.Logger,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str) -> None:
+    def __init__(self, logger:logging.Logger,db_username:str,db_pswrd:str,db_server_ip:str, mc_pswrd:str, token_limit:int, timeout:int) -> None:
         self.logger = logger
         self.db_username:str = db_username
         self.db_password:str = db_pswrd
         self.db_ip:str       = db_server_ip
         self.mc_password:str = mc_pswrd
-        #TODO token_limit und timeout in settings
-        self.token_limit:int = 3
-        self.timeout:int     = 5*60
+        self.token_limit:int = token_limit
+        self.timeout:int     = timeout
 
     def sql_call(self,cmd:str)->pd.DataFrame:
         engine = sqlalchemy.create_engine(
@@ -141,7 +140,6 @@ class Handler():
                 return True
             elif token != "None": self.logger.debug("user entered a false token. try:{counter}")
 
-            #TODO sleep timer multiplizieren 
             time.sleep(5)
 
         if counter <= self.token_limit:
@@ -150,9 +148,8 @@ class Handler():
             self.logger.info("user: {user.mail} took to long")
         return False
 
-    def mcrcon_call(self,cmd:str)->str:
-        #TODO ip in settings
-        with MCRcon("45.154.49.72", self.mc_password) as mcr:
+    def mcrcon_call(self,cmd:str,ip:str)->str:
+        with MCRcon(ip, self.mc_password) as mcr:
             resp = mcr.command(cmd)
             self.logger.info(resp)
         return resp
@@ -165,7 +162,7 @@ def main()->None:
     conf = p.load_settings("/../settings.yml")
     #  u = User( mail= "test", username = "test", name= "test")
     #  print(u)
-    h = Handler(logging.Logger("test"),conf.db_username,conf.db_password,conf.db_server_ip,conf.mcrcon_password)
+    h = Handler(logging.Logger("test"),conf.db_username,conf.db_password,conf.db_server_ip,conf.mcrcon_password,3,5*60)
     sq = h.sql_get_first_user()
     u = p.get_user(sq)
     print(u)

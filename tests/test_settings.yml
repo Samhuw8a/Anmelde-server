@@ -9,6 +9,9 @@ token:
     # minutes
     timeout: 5
 
+rcon:
+  mc_server_ip : "45.154.49.72"
+
 email:
     sender : "no_reply@ksrminecraft.ch"
     token_email: "/../template/Anmelde_mail.txt"

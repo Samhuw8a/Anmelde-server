@@ -24,8 +24,19 @@ class Event_handler():
         self.logger            = self.init_logger()
         self.parser            = Parser(self.logger)
         self.settings:Settings = self.parser.load_settings(SETTINGS)
-        self.handler           = Handler(self.logger, self.settings.db_username,self.settings.db_password,self.settings.db_server_ip,self.settings.mcrcon_password)
-        self.emailer           = Email_server(self.logger, 465,"cap.ssl.hosttech.eu",self.settings.mail_password)
+        self.handler           = Handler(self.logger,
+                                         self.settings.db_username,
+                                         self.settings.db_password,
+                                         self.settings.db_server_ip,
+                                         self.settings.mcrcon_password,
+                                         self.settings.token_tries,
+                                         self.settings.token_timeout)
+
+        self.emailer           = Email_server(self.logger,
+                                              465,
+                                              "cap.ssl.hosttech.eu",
+                                              self.settings.mail_password,
+                                              self.settings.sender_email)
 
         self.emailer.load_from_template(self.settings.token_email)
         self.logger.info("Initialised Event_handler")
@@ -87,7 +98,7 @@ class Event_handler():
             self.is_undone(user)
             return
 
-        response = self.handler.mcrcon_call(f"whitelist add {user.username}")
+        response = self.handler.mcrcon_call(f"whitelist add {user.username}",self.settings.mcrcon_ip)
 
         if not self.parser.mc_call(response):
             self.is_undone(user)
