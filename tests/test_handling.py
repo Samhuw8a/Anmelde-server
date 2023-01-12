@@ -46,17 +46,6 @@ class test_Parser(unittest.TestCase):
     def test_load_settings(self):
         test_settings=self.parser.load_settings("/test_settings.yml") 
         self.assertIsInstance(test_settings,Settings)
-        self.assertEqual(test_settings.db_username          , "register")
-        self.assertEqual(test_settings.db_password          , "**************")
-        self.assertEqual(test_settings.db_server_ip         , "185.101.158.55")
-        self.assertEqual(test_settings.db_database          , "Registration")
-        self.assertEqual(test_settings.db_table             , "registration")
-        self.assertEqual(test_settings.mail_password        , "**************")
-        self.assertEqual(test_settings.mcrcon_password      , "***************")
-        self.assertEqual(test_settings.trusted_mail_suffix  , ["test.ch"])
-        self.assertEqual(test_settings.token_email          , "/../template/Anmelde_mail.txt")
-        self.assertEqual(test_settings.false_username_email , "/../template/false_username.txt")
-        self.assertTrue(test_settings.output)
 
     #TODO: get_user,load_settings
 

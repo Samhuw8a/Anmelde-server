@@ -52,10 +52,13 @@ class Parser():
                 mail_password        = settings['credentials']['password_web'],
                 mcrcon_password      = settings['credentials']['mcpassword'],
                 trusted_mail_suffix  = settings['settings']["trusted_mail_suffix"],
-                token_email          = settings["settings"]["token_email"],
                 logs                 = settings['settings']['logs'],
-                false_username_email = settings["settings"]["false_username_email"],
-                output               = settings["settings"]["output"],
+                sender_email          = settings['email']['sender'],
+                token_email          = settings['email']['token_email'],
+                false_username_email = settings['email']["false_username_email"],
+                token_tries          = settings['token']['tries'],
+                token_timeout        = settings['token']['timeout']*60,
+
             )
 
     def get_user(self, dbframe:pd.DataFrame)->User:

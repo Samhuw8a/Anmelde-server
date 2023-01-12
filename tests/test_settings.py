@@ -14,10 +14,12 @@ class test_Settings(unittest.TestCase):
             mail_password   = "test",
             mcrcon_password = "test",
             trusted_mail_suffix=["test.ch"],
-            token_email= "/token_email.txt",
             logs            = "/../logs/",
+            token_email= "/token_email.txt",
             false_username_email= "/false_username_email.txt",
-            output = True
+            sender_email    = "test@ksrminecraft.ch",
+            token_tries     = 3,
+            token_timeout    = 5*60,
         )
 
     def setUp(self):
@@ -30,10 +32,12 @@ class test_Settings(unittest.TestCase):
             mail_password   = "test",
             mcrcon_password = "test",
             trusted_mail_suffix=["test.ch"],
-            token_email= "/token_email.txt",
             logs            = "/../logs/",
+            token_email= "/token_email.txt",
             false_username_email= "/false_username_email.txt",
-            output = True
+            sender_email    = "test@ksrminecraft.ch",
+            token_tries     = 3,
+            token_timeout    = 5*60,
         )
 
     def test_false_args(self):

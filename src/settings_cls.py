@@ -18,9 +18,12 @@ class Settings(BaseModel):
 
     trusted_mail_suffix  : List[str]
     token_email          : str      
+    sender_email         : str
     logs                 : str
     false_username_email : str      
-    output               : bool     
+
+    token_tries          :int
+    token_timeout        :int
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
