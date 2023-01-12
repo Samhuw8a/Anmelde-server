@@ -53,7 +53,7 @@ class Parser():
                 mcrcon_password      = settings['credentials']['mcpassword'],
                 trusted_mail_suffix  = settings['settings']["trusted_mail_suffix"],
                 logs                 = settings['settings']['logs'],
-                sender_email          = settings['email']['sender'],
+                sender_email         = settings['email']['sender'],
                 token_email          = settings['email']['token_email'],
                 false_username_email = settings['email']["false_username_email"],
                 token_tries          = settings['token']['tries'],
@@ -159,6 +159,9 @@ class Handler():
 
 def main()->None:
     p = Parser(logging.Logger("test"))
+
+    conf = p.load_settings("/../template_settings.yml")
+    print(conf)
     conf = p.load_settings("/../settings.yml")
     #  u = User( mail= "test", username = "test", name= "test")
     #  print(u)

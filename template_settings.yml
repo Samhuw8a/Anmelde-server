@@ -2,7 +2,17 @@ settings:
     trusted_mail_suffix: [
         "sluz.ch"
     ]
-    logs: "/../logs/"
+    logs:  "/../logs/"
+
+token:
+    tries: 3
+    # minutes
+    timeout: 5
+
+email:
+    sender : "no_reply@ksrminecraft.ch"
+    token_email: "/../template/Anmelde_mail.txt"
+    false_username_email: "/../template/false_username.txt"
 
 db:
     server_ip : "185.101.158.55"
@@ -14,4 +24,3 @@ credentials:
     password_db:  "**************"
     password_web: "**************"
     mcpassword:   "***************"
-
