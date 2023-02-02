@@ -2,8 +2,9 @@ from handling import Handler, Parser, User
 from settings_cls import Settings
 from email_handler import Email_server
 from errors import Error, UserError, SQLError
-import random
+from typing import Any
 import logging
+import random
 import os
 import sys
 
@@ -11,7 +12,9 @@ SETTINGS ="/../settings.yml"
 
 #TODO logging.conf
 
-OUTPUT=True
+#  OUTPUT = globals()["OUTPUT"] if "OUTPUT" in globals().keys() else "asdf"
+print(OUTPUT)
+
 LOG_FILE="/../logs/log.log"
 STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 FILE_LOGGING_FORMAT   = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -20,8 +23,8 @@ STREAM_LEVEL= logging.DEBUG
 
 
 class Event_handler():
-    def __init__(self)->None:
-        self.logger            = self.init_logger()
+    def __init__(self,log_file:str, stream_logging_format:str, file_logging_format:str, file_level:Any, stream_level:Any)->None:
+        self.logger            = self.init_logger(log_file,stream_logging_format,file_logging_format,file_level,stream_level)
         self.parser            = Parser(self.logger)
         self.settings:Settings = self.parser.load_settings(SETTINGS)
         self.handler           = Handler(self.logger,
@@ -46,20 +49,20 @@ class Event_handler():
     def is_undone(self,user:User)->None:
         self.handler.sql_set_reg_status(user,2)
 
-    def init_logger(self)->logging.Logger:
-        path = os.path.dirname(__file__)+LOG_FILE
+    def init_logger(self,log_file:str, stream_logging_format:str, file_logging_format:str, file_level:int, stream_level:str)->logging.Logger:
+        path = os.path.dirname(__file__)+log_file
 
-        file_formater   = logging.Formatter(FILE_LOGGING_FORMAT)
-        stream_formater = logging.Formatter(STREAM_LOGGING_FORMAT)
+        file_formater   = logging.Formatter(file_logging_format)
+        stream_formater = logging.Formatter(stream_logging_format)
 
         if OUTPUT:
             streamhandler   = logging.StreamHandler(sys.stdout)
-            streamhandler.setLevel(STREAM_LEVEL)
+            streamhandler.setLevel(stream_level)
             streamhandler.setFormatter(stream_formater)
 
         filehandler     = logging.FileHandler(path)
         filehandler.setFormatter(file_formater)
-        filehandler.setLevel(FILE_LEVEL)
+        filehandler.setLevel(file_level)
 
         logger = logging.Logger("main")
         logger.addHandler(filehandler)
@@ -110,8 +113,9 @@ class Event_handler():
 
 
 def main()->None:
-    eventhandler = Event_handler()
+    eventhandler = Event_handler(LOG_FILE,STREAM_LOGGING_FORMAT,FILE_LOGGING_FORMAT,FILE_LEVEL,STREAM_LEVEL)
     eventhandler.main()
 
 if __name__ == "__main__":
-    main()
+    pass
+    #  main()
