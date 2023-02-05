@@ -3,6 +3,15 @@ from pydantic import BaseModel,validator,ValidationError
 from typing import List, Any
 import re
 
+class Log_conf(BaseModel):
+    log_file:str
+    stream_logging_format:str
+    file_logging_format:str
+    file_level:int
+    stream_level:int
+    output:bool
+
+
 class Settings(BaseModel):
 
     class Config:

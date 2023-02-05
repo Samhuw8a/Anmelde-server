@@ -1,12 +1,14 @@
 from os import pardir
-from main import OUTPUT, Event_handler
+from main import Event_handler
 from errors import Error, UserError, SQLError, ConfigError
+from _logging import init_logger
+from settings_cls import Log_conf
 import sys
 import logging
 import argparse
 import time
 
-OUTPUT = bool()
+OUTPUT = True
 LOG_FILE="/../logs/log.log"
 STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 FILE_LOGGING_FORMAT   = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -28,18 +30,28 @@ def init_argparser()->argparse.ArgumentParser:
     return parser 
 
 def main()->None:
-    global OUTPUT
     abort = False
+
     parser= init_argparser()
     args = parser.parse_args(sys.argv[1:])
-    OUTPUT = args.verbose
+
+    output = args.verbose
     log_file = args.log_file
     stream_logging_format = STREAM_LOGGING_FORMAT
     file_logging_format = FILE_LOGGING_FORMAT
     file_level=FILE_LEVEL
     stream_level=STREAM_LEVEL
-    handler = Event_handler(log_file,stream_logging_format,file_logging_format,file_level,stream_level)
-    #  while True:
+
+    log_config = Log_conf(log_file = log_file,
+                          stream_logging_format = stream_logging_format,
+                          file_logging_format = file_logging_format,
+                          file_level = file_level,
+                          stream_level = stream_level,
+                          output = output,
+                         )
+    logger = init_logger(log_config)
+    handler = Event_handler(logger)
+
     #      try: handler.main()
     #      except UserError as e:
     #          print(e)

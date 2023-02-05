@@ -13,18 +13,10 @@ SETTINGS ="/../settings.yml"
 #TODO logging.conf
 
 #  OUTPUT = globals()["OUTPUT"] if "OUTPUT" in globals().keys() else "asdf"
-print(OUTPUT)
-
-LOG_FILE="/../logs/log.log"
-STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-FILE_LOGGING_FORMAT   = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-FILE_LEVEL  = logging.INFO
-STREAM_LEVEL= logging.DEBUG
-
 
 class Event_handler():
-    def __init__(self,log_file:str, stream_logging_format:str, file_logging_format:str, file_level:Any, stream_level:Any)->None:
-        self.logger            = self.init_logger(log_file,stream_logging_format,file_logging_format,file_level,stream_level)
+    def __init__(self,logger:logging.Logger)->None:
+        self.logger            = logger
         self.parser            = Parser(self.logger)
         self.settings:Settings = self.parser.load_settings(SETTINGS)
         self.handler           = Handler(self.logger,
@@ -48,28 +40,6 @@ class Event_handler():
         self.handler.sql_set_reg_status(user,1)
     def is_undone(self,user:User)->None:
         self.handler.sql_set_reg_status(user,2)
-
-    def init_logger(self,log_file:str, stream_logging_format:str, file_logging_format:str, file_level:int, stream_level:str)->logging.Logger:
-        path = os.path.dirname(__file__)+log_file
-
-        file_formater   = logging.Formatter(file_logging_format)
-        stream_formater = logging.Formatter(stream_logging_format)
-
-        if OUTPUT:
-            streamhandler   = logging.StreamHandler(sys.stdout)
-            streamhandler.setLevel(stream_level)
-            streamhandler.setFormatter(stream_formater)
-
-        filehandler     = logging.FileHandler(path)
-        filehandler.setFormatter(file_formater)
-        filehandler.setLevel(file_level)
-
-        logger = logging.Logger("main")
-        logger.addHandler(filehandler)
-        if OUTPUT:
-            logger.addHandler(streamhandler)
-
-        return logger
 
     def main(self)->None:
         que = self.handler.sql_get_first_user()
@@ -113,8 +83,8 @@ class Event_handler():
 
 
 def main()->None:
-    eventhandler = Event_handler(LOG_FILE,STREAM_LOGGING_FORMAT,FILE_LOGGING_FORMAT,FILE_LEVEL,STREAM_LEVEL)
-    eventhandler.main()
+    eventhandler = Event_handler(logging.getLogger(__name__))
+    #  eventhandler.main()
 
 if __name__ == "__main__":
     pass
