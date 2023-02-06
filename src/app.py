@@ -29,6 +29,7 @@ def init_argparser() -> argparse.ArgumentParser:
     )
     parser.add_argument("-l", "--log_file", default=LOG_FILE)
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("-t", "--timeout", action="store",default = 7, type= int)
     return parser
 
 
@@ -44,6 +45,7 @@ def main() -> None:
     file_logging_format = FILE_LOGGING_FORMAT
     file_level = FILE_LEVEL
     stream_level = STREAM_LEVEL
+    timeout = args.timeout
 
     log_config = Log_conf(
         log_file=log_file,
@@ -55,19 +57,18 @@ def main() -> None:
     )
     logger = init_logger(log_config)
     handler = Event_handler(logger)
+    while not abort:
+        try: handler.main()
+        except UserError as e:
+            print(e)
+        except KeyboardInterrupt:
+            abort = True
 
-    #      try: handler.main()
-    #      except UserError as e:
-    #          print(e)
-    #      except KeyboardInterrupt:
-    #          abort = True
-    #
-    #      if abort: beenden()
-    #
-    #      try:time.sleep(5)
-    #      except KeyboardInterrupt:
-    #          beenden()
+        if abort: beenden()
 
+        try:time.sleep(timeout)
+        except KeyboardInterrupt:
+            beenden()
 
 if __name__ == "__main__":
     main()

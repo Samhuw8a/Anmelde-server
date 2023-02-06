@@ -10,11 +10,6 @@ import sys
 
 SETTINGS = "/../settings.yml"
 
-# TODO logging.conf
-
-#  OUTPUT = globals()["OUTPUT"] if "OUTPUT" in globals().keys() else "asdf"
-
-
 class Event_handler:
     def __init__(self, logger: logging.Logger) -> None:
         self.logger = logger
