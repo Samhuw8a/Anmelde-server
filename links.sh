@@ -1,5 +1,10 @@
 #! /bin/bash
 
+mkdir logs
+cd logs
+mkdir errors
+cd ..
+
 cd tests
 
 rm argparser.py

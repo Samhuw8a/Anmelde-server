@@ -1,7 +1,7 @@
 from os import pardir
 from main import Event_handler
 from errors import Error, UserError, SQLError, ConfigError
-from _logging import init_logger
+from _logging import init_logger, log_error
 from settings_cls import Log_conf
 import sys
 import logging
@@ -10,6 +10,7 @@ import time
 
 OUTPUT = True
 LOG_FILE = "/../logs/log.log"
+ERROR_DIR = "/../logs/errors/"
 STREAM_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 FILE_LOGGING_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 FILE_LEVEL = logging.INFO
@@ -62,8 +63,13 @@ def main() -> None:
             handler.main()
         except UserError as e:
             print(e)
+
         except KeyboardInterrupt:
             abort = True
+
+        except Exception as e:
+            log_error(e, logger, ERROR_DIR)
+            beenden()
 
         if abort:
             beenden()

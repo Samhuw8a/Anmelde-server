@@ -2,8 +2,20 @@ import logging
 import functools
 import sys
 import os
+from datetime import datetime
+import traceback
 from settings_cls import Log_conf
 from typing import Callable, Any
+
+
+def log_error(ex: Exception, logger: logging.Logger, error_dir: str) -> None:
+    dt = datetime.now()
+    nw = dt.strftime("%d:%m_%H:%M")
+    file = error_dir + f"{nw}.log"
+    logger.error(f"An Error occurred while executing (see: {file})")
+    path = os.path.dirname(__file__) + file
+    with open(path, "a") as log:
+        traceback.print_exception(ex, file=log)
 
 
 def init_logger(l_conf: Log_conf) -> logging.Logger:
