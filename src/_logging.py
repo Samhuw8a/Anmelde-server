@@ -15,7 +15,7 @@ def log_error(ex: Any, logger: logging.Logger, error_dir: str) -> None:
     logger.error(f"An Error occurred while executing (see: {file})")
     path = os.path.dirname(__file__) + file
     with open(path, "a") as log:
-        traceback.print_exception(ex, file=log)
+        traceback.print_exc(file=log)
 
 
 def init_logger(l_conf: Log_conf) -> logging.Logger:
