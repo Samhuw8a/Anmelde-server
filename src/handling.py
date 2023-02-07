@@ -160,19 +160,19 @@ class Handler:
                 try:
                     ret = int(token)
                 except ValueError:
-                    self.logger.debug("user entered an invalid token. try:{counter}")
+                    self.logger.debug(f"user entered an invalid token. try:{counter}")
 
             if ret == user.token:
                 return True
             elif token != "None":
-                self.logger.debug("user entered a false token. try:{counter}")
+                self.logger.debug(f"user entered a false token. try:{counter}")
 
             time.sleep(5)
 
         if counter <= self.token_limit:
             self.logger.info("user took to many tries")
         else:
-            self.logger.info("user: {user.mail} took to long")
+            self.logger.info(f"user: {user.mail} took to long")
         return False
 
     def mcrcon_call(self, cmd: str, ip: str) -> str:
