@@ -11,4 +11,4 @@ COPY requirements.txt ./requirements.txt
 RUN pip install -r ./requirements.txt
 WORKDIR /Anmelde_server/src
 
-CMD ["python", "app.py"]
+CMD ["python", "app.py","-v"]

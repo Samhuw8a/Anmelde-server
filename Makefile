@@ -8,4 +8,4 @@ test:
 	python3.10 tests/test.py
 
 run:
-	docker run -v $(shell pwd)/logs:/Anmelde_server/logs anmelden
+	docker run -v $(shell pwd)/logs:/Anmelde_server/logs anmelden $(ARGS)
