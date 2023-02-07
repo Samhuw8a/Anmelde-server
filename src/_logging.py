@@ -5,10 +5,10 @@ import os
 from datetime import datetime
 import traceback
 from settings_cls import Log_conf
-from typing import Callable, Any
+from typing import Callable, Any, Type
 
 
-def log_error(ex: BaseException, logger: logging.Logger, error_dir: str) -> None:
+def log_error(ex: Type[BaseException], logger: logging.Logger, error_dir: str) -> None:
     dt = datetime.now()
     nw = dt.strftime("%d:%m_%H:%M")
     file = error_dir + f"{nw}.log"
@@ -39,7 +39,7 @@ def init_logger(l_conf: Log_conf) -> logging.Logger:
     return logger
 
 
-def with_logging(logger: logging.Logger):
+def with_logging(logger: logging.Logger) -> Callable:
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
