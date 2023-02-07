@@ -142,8 +142,9 @@ class Handler:
         timeout_limit = time.time() + self.timeout
         counter = 0
         ret = 0
+        tries = ["0"]
 
-        while counter <= self.token_limit or time.time() >= timeout_limit:
+        while counter <= self.token_limit and time.time() <= timeout_limit:
             sql = self.sql_call(
                 f"SELECT token FROM registration WHERE reg_mail = '{user.mail}'"
             )
@@ -156,22 +157,24 @@ class Handler:
             token = str(sql).split()[-1]
 
             if token != "None":
-                counter += 1
+                counter += token not in tries
                 try:
                     ret = int(token)
+
                 except ValueError:
                     self.logger.debug(f"user entered an invalid token. try:{counter}")
 
             if ret == user.token:
                 return True
-            elif token != "None":
+            elif token not in tries and counter:
                 self.logger.debug(f"user entered a false token. try:{counter}")
+                tries.append(token)
 
             time.sleep(5)
 
-        if counter <= self.token_limit:
+        if counter > self.token_limit:
             self.logger.info("user took to many tries")
-        else:
+        elif time.time() >= timeout_limit:
             self.logger.info(f"user: {user.mail} took to long")
         return False
 
