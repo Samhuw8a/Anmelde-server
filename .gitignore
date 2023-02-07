@@ -8,6 +8,7 @@ logs/*
 /tests/email_handler.py
 /tests/settings_cls.py
 /tests/argparser.py
+/tests/_logging.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

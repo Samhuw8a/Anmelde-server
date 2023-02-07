@@ -9,3 +9,10 @@ test:
 
 run:
 	docker run -v $(shell pwd)/logs:/Anmelde_server/logs anmelden $(ARGS)
+
+link:
+	./links.sh
+
+clear_log:
+	rm ./logs/*.log
+	rm ./logs/errors/*.log

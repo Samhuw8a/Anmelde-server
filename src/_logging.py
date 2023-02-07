@@ -8,7 +8,7 @@ from settings_cls import Log_conf
 from typing import Callable, Any
 
 
-def log_error(ex: Exception, logger: logging.Logger, error_dir: str) -> None:
+def log_error(ex: BaseException, logger: logging.Logger, error_dir: str) -> None:
     dt = datetime.now()
     nw = dt.strftime("%d:%m_%H:%M")
     file = error_dir + f"{nw}.log"
