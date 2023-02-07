@@ -83,6 +83,7 @@ class Event_handler:
             self.emailer.load_from_template(self.settings.false_username_email)
             self.emailer.send(user, "Minecraftname existiert nicht")
             self.logger.info(f"sent false_username_email to {user.mail}")
+            return
 
         self.is_done(user)
 
