@@ -1,10 +1,14 @@
 settings.yml
 
+logs/*
+
 /tests/handling.py
 /tests/main.py
 /tests/errors.py
 /tests/email_handler.py
 /tests/settings_cls.py
+/tests/argparser.py
+/tests/_logging.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

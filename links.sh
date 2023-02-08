@@ -1,6 +1,17 @@
 #! /bin/bash
 
+mkdir logs
+cd logs
+mkdir errors
+cd ..
+
 cd tests
+
+rm argparser.py
+ln ../src/argparser.py .
+
+rm _logging.py
+ln ../src/_logging.py .
 
 rm settings_cls.py
 ln ../src/settings_cls.py .
