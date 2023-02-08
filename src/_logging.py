@@ -12,7 +12,7 @@ def log_error(ex: Any, logger: logging.Logger, error_dir: str) -> None:
     dt = datetime.now()
     nw = dt.strftime("%d:%m_%H:%M")
     file = error_dir + f"{nw}.log"
-    logger.error(f"An Error occurred while executing (see: {file})")
+    logger.error(f"An Error ({type(ex)}) occurred while executing (see: {file})")
     path = os.path.dirname(__file__) + file
     with open(path, "a") as log:
         traceback.print_exc(file=log)

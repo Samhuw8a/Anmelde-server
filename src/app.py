@@ -3,6 +3,7 @@ from main import Event_handler
 from errors import Error, UserError, SQLError, ConfigError
 from _logging import init_logger, log_error
 from settings_cls import Log_conf
+from sqlalchemy.exc import OperationalError
 import sys
 import logging
 import argparse
@@ -66,6 +67,11 @@ def main() -> None:
 
         except KeyboardInterrupt:
             abort = True
+
+        except OperationalError as e:
+            log_error(e, logger, ERROR_DIR)
+            logger.info("Sleeping for 10s")
+            time.sleep(10)
 
         except Exception as e:
             log_error(e, logger, ERROR_DIR)
