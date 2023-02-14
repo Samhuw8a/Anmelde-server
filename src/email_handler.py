@@ -5,7 +5,7 @@ import os
 from handling import User
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from typing import Optional,Any
+from typing import Optional, Any
 
 
 class Email_server:
@@ -32,8 +32,8 @@ class Email_server:
         with open(os.path.dirname(__file__) + file_name, "r") as f:
             self.message = f.read().strip()
 
-    def send(self, user: User, subject: str, msg_inp:Optional[str] = None) -> None:
-        msg_str:Any = self.message if msg_inp else msg_inp
+    def send(self, user: User, subject: str, msg_inp: Optional[str] = None) -> None:
+        msg_str: Any = self.message if msg_inp else msg_inp
         self.message = self.message.replace("{mail}", user.mail)
         self.message = self.message.replace("{token}", str(user.token))
         self.message = self.message.replace("{name}", user.name)
@@ -57,7 +57,7 @@ def main() -> None:
     )
     samuel = User(mail="samuel.huwiler@gmx.ch", username="samhuw_8a", name="Samuel")
     #  serv.load_from_template("/../tests/test_mail.txt")
-    serv.send(samuel, "Test_mail","/../tests/test_mail.txt")
+    serv.send(samuel, "Test_mail", "/../tests/test_mail.txt")
 
 
 if __name__ == "__main__":
