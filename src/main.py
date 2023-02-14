@@ -34,7 +34,7 @@ class Event_handler:
             self.settings.sender_email,
         )
 
-        self.emailer.load_from_template(self.settings.token_email)
+        #  self.emailer.load_from_template(self.settings.token_email)
         self.logger.info("Initialised Event_handler")
 
     def is_done(self, user: User) -> None:
@@ -61,8 +61,8 @@ class Event_handler:
 
         user.token = random.randint(1_000_000, 999_999_999)
 
-        self.emailer.load_from_template(self.settings.token_email)
-        self.emailer.send(user, "Deine Registration bei KSRMinecraft")
+        #  self.emailer.load_from_template(self.settings.token_email)
+        self.emailer.send(user, "Deine Registration bei KSRMinecraft",msg_inp=self.settings.token_email)
         self.logger.info(f"sent token to {user.mail}")
 
         try:
@@ -80,8 +80,8 @@ class Event_handler:
 
         if not self.parser.mc_call(response):
             self.is_undone(user)
-            self.emailer.load_from_template(self.settings.false_username_email)
-            self.emailer.send(user, "Minecraftname existiert nicht")
+            #  self.emailer.load_from_template(self.settings.false_username_email)
+            self.emailer.send(user, "Minecraftname existiert nicht",self.settings.false_username_email)
             self.logger.info(f"sent false_username_email to {user.mail}")
             return
 
