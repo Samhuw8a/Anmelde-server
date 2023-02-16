@@ -1,6 +1,7 @@
 class Error(Exception):
     pass
 
+
 class ConfigError(Error):
     pass
 
@@ -12,12 +13,14 @@ class SQLError(Error):
 class UserError(Error):
     pass
 
+
 class TokenError(Error):
     pass
 
 
 class ToManyTriesError(TokenError):
     pass
+
 
 class TokenTimeOutError(TokenError):
     pass

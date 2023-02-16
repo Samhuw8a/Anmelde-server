@@ -1,7 +1,7 @@
 from handling import Handler, Parser, User
 from settings_cls import Settings
 from email_handler import Email_server
-from errors import Error, UserError, SQLError,TokenError
+from errors import Error, UserError, SQLError, TokenError
 from typing import Any
 import logging
 import random
@@ -63,9 +63,7 @@ class Event_handler:
 
         #  self.emailer.load_from_template(self.settings.token_email)
         self.emailer.send(
-            user,
-            "Deine Registration bei KSRMinecraft",
-            self.settings.token_email,
+            user, "Deine Registration bei KSRMinecraft", self.settings.token_email
         )
         self.logger.info(f"sent token to {user.mail}")
 

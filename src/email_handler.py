@@ -30,7 +30,7 @@ class Email_server:
     #      with open(os.path.dirname(__file__) + file_name, "r") as f:
     #          self.message = f.read().strip()
 
-    def send(self, user: User, subject: str, msg_path:str) -> None:
+    def send(self, user: User, subject: str, msg_path: str) -> None:
 
         #  msg_str: Any = self.message if msg_path else msg_inp
         with open(os.path.dirname(__file__) + msg_path, "r") as f:

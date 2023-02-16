@@ -13,7 +13,7 @@ from settings_cls import Settings
 from pydantic import BaseModel, validator
 
 from typing import Optional, Any
-from errors import Error, UserError, SQLError, TokenTimeOutError,ToManyTriesError
+from errors import Error, UserError, SQLError, TokenTimeOutError, ToManyTriesError
 import logging
 
 
