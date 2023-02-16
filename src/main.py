@@ -1,7 +1,7 @@
 from handling import Handler, Parser, User
 from settings_cls import Settings
 from email_handler import Email_server
-from errors import Error, UserError, SQLError
+from errors import Error, UserError, SQLError,TokenError
 from typing import Any
 import logging
 import random
@@ -65,16 +65,17 @@ class Event_handler:
         self.emailer.send(
             user,
             "Deine Registration bei KSRMinecraft",
-            msg_inp=self.settings.token_email,
+            self.settings.token_email,
         )
         self.logger.info(f"sent token to {user.mail}")
 
         try:
-            is_valid = self.handler.await_token(user)
+            self.handler.await_token(user)
+
         except SQLError as e:
             raise e
 
-        if not is_valid:
+        except TokenError as e:
             self.is_undone(user)
             return
 
