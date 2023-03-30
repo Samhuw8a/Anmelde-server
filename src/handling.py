@@ -13,7 +13,7 @@ from settings_cls import Settings
 from pydantic import BaseModel, validator
 
 from typing import Optional, Any
-from errors import Error, UserError, SQLError
+from errors import Error, UserError, SQLError, TokenTimeOutError, ToManyTriesError
 import logging
 
 
@@ -138,7 +138,7 @@ class Handler:
             " LIMIT 1"
         )
 
-    def await_token(self, user: User) -> bool:
+    def await_token(self, user: User) -> None:
         timeout_limit = time.time() + self.timeout
         counter = 0
         ret = 0
@@ -165,7 +165,8 @@ class Handler:
                     self.logger.debug(f"user entered an invalid token. try:{counter}")
 
             if ret == user.token:
-                return True
+                self.logger.info("User entered the correct token")
+                return
             elif token not in tries and counter:
                 self.logger.debug(f"user entered a false token. try:{counter}")
                 tries.append(token)
@@ -174,9 +175,10 @@ class Handler:
 
         if counter > self.token_limit:
             self.logger.info("user took to many tries")
+            raise ToManyTriesError
         elif time.time() >= timeout_limit:
             self.logger.info(f"user: {user.mail} took to long")
-        return False
+            raise TokenTimeOutError
 
     def mcrcon_call(self, cmd: str, ip: str) -> str:
         with MCRcon(ip, self.mc_password) as mcr:

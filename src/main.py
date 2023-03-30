@@ -1,7 +1,7 @@
 from handling import Handler, Parser, User
 from settings_cls import Settings
 from email_handler import Email_server
-from errors import Error, UserError, SQLError
+from errors import Error, UserError, SQLError, TokenError
 from typing import Any
 import logging
 import random
@@ -34,7 +34,7 @@ class Event_handler:
             self.settings.sender_email,
         )
 
-        self.emailer.load_from_template(self.settings.token_email)
+        #  self.emailer.load_from_template(self.settings.token_email)
         self.logger.info("Initialised Event_handler")
 
     def is_done(self, user: User) -> None:
@@ -61,16 +61,19 @@ class Event_handler:
 
         user.token = random.randint(1_000_000, 999_999_999)
 
-        self.emailer.load_from_template(self.settings.token_email)
-        self.emailer.send(user, "Deine Registration bei KSRMinecraft")
+        #  self.emailer.load_from_template(self.settings.token_email)
+        self.emailer.send(
+            user, "Deine Registration bei KSRMinecraft", self.settings.token_email
+        )
         self.logger.info(f"sent token to {user.mail}")
 
         try:
-            is_valid = self.handler.await_token(user)
+            self.handler.await_token(user)
+
         except SQLError as e:
             raise e
 
-        if not is_valid:
+        except TokenError as e:
             self.is_undone(user)
             return
 
@@ -80,8 +83,12 @@ class Event_handler:
 
         if not self.parser.mc_call(response):
             self.is_undone(user)
-            self.emailer.load_from_template(self.settings.false_username_email)
-            self.emailer.send(user, "Minecraftname existiert nicht")
+            #  self.emailer.load_from_template(self.settings.false_username_email)
+            self.emailer.send(
+                user,
+                "Minecraftname existiert nicht",
+                self.settings.false_username_email,
+            )
             self.logger.info(f"sent false_username_email to {user.mail}")
             return
 
