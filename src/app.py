@@ -69,7 +69,6 @@ def main() -> None:
             abort = True
 
         except OperationalError as e:
-            log_error(e, logger, ERROR_DIR)
             logger.info("Sleeping for 10s")
             time.sleep(10)
 
